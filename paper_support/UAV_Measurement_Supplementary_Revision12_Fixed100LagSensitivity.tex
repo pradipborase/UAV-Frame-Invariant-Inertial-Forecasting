@@ -1,0 +1,277 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.72in]{geometry}
+\usepackage{booktabs,longtable,array,siunitx,pdflscape,microtype,seqsplit}
+\usepackage[hidelinks]{hyperref}
+\usepackage{caption}
+\sisetup{detect-all,per-mode=symbol}
+\newcommand{\qf}{q_f}
+\newcommand{\qw}{q_\omega}
+\begin{document}
+\begin{center}
+{\Large\bfseries Supplementary Material}\\[0.5em]
+{\large A Frame-Invariant Evaluation Protocol for Cross-Platform Short-Horizon UAV Inertial Forecasting}\\[0.8em]
+Pradip Diwan Borase and Vijyant Agarwal\\
+Department of Mechanical Engineering, Netaji Subhas University of Technology, New Delhi, Delhi, India
+\end{center}
+\vspace{0.5em}
+\noindent This supplement reports numerical and audit details supporting the manuscript. It does not introduce new model fitting or post-hoc target-domain selection. The flight recording remains the inferential unit throughout.
+\section*{S1. Flight-level primary RMSE}
+Tables S1a--S1d report the multi-horizon RMSE for every independent flight and every principal model. Ridge denotes the source-selected B3 model using $[\qf,\qw]$; in UZH-FPV$\rightarrow$EuRoC this is deliberately different from the lower target-error B2 sensitivity model, because the primary comparator is fixed by source-domain validation.
+\begin{table}[htbp]\centering
+\caption*{Table S1a. Flight-level multi-horizon RMSE for Within EuRoC (\si{\metre\per\second\squared}).}
+\scriptsize
+\begin{tabular}{p{0.35\textwidth}rrrrr}
+\toprule
+Flight & Persistence & Ridge B3 & TCN & GRU & Transformer\\
+\midrule
+V1\_01\_easy & 0.564 & 0.428 & 0.437 & 0.438 & 0.446 \\
+V1\_02\_medium & 0.793 & 0.637 & 0.658 & 0.657 & 0.672 \\
+V1\_03\_difficult & 0.838 & 0.673 & 0.687 & 0.682 & 0.702 \\
+V2\_01\_easy & 1.130 & 0.902 & 0.881 & 0.873 & 0.867 \\
+V2\_02\_medium & 1.041 & 0.833 & 0.842 & 0.844 & 0.870 \\
+V2\_03\_difficult & 1.136 & 0.898 & 0.906 & 0.895 & 0.907 \\
+\bottomrule
+\end{tabular}
+\end{table}
+\begin{table}[htbp]\centering
+\caption*{Table S1b. Flight-level multi-horizon RMSE for Within UZH-FPV (\si{\metre\per\second\squared}).}
+\scriptsize
+\begin{tabular}{p{0.35\textwidth}rrrrr}
+\toprule
+Flight & Persistence & Ridge B3 & TCN & GRU & Transformer\\
+\midrule
+indoor\_forward\_6\_snapdragon & 4.075 & 3.481 & 3.477 & 3.610 & 3.444 \\
+indoor\_forward\_9\_snapdragon & 0.761 & 0.768 & 0.769 & 0.723 & 0.751 \\
+indoor\_forward\_10\_snapdragon & 0.949 & 0.893 & 0.858 & 0.823 & 0.853 \\
+indoor\_45\_2\_snapdragon & 2.573 & 2.106 & 2.032 & 2.133 & 2.023 \\
+indoor\_45\_4\_snapdragon & 3.160 & 2.468 & 2.432 & 2.532 & 2.429 \\
+indoor\_45\_13\_snapdragon & 2.462 & 1.930 & 1.856 & 1.870 & 1.831 \\
+indoor\_45\_14\_snapdragon & 2.620 & 2.354 & 2.351 & 2.332 & 2.269 \\
+outdoor\_forward\_1\_snapdragon & 2.194 & 1.544 & 1.586 & 1.543 & 1.561 \\
+\bottomrule
+\end{tabular}
+\end{table}
+\begin{table}[htbp]\centering
+\caption*{Table S1c. Flight-level multi-horizon RMSE for EuRoC$\rightarrow$UZH-FPV (\si{\metre\per\second\squared}).}
+\scriptsize
+\begin{tabular}{p{0.35\textwidth}rrrrr}
+\toprule
+Flight & Persistence & Ridge B3 & TCN & GRU & Transformer\\
+\midrule
+indoor\_forward\_6\_snapdragon & 4.075 & 3.810 & 3.835 & 4.000 & 4.276 \\
+indoor\_forward\_9\_snapdragon & 0.761 & 0.897 & 0.892 & 0.872 & 1.031 \\
+indoor\_forward\_10\_snapdragon & 0.949 & 1.049 & 1.041 & 1.053 & 1.251 \\
+indoor\_45\_2\_snapdragon & 2.573 & 2.141 & 2.137 & 2.170 & 2.199 \\
+indoor\_45\_4\_snapdragon & 3.160 & 2.634 & 2.566 & 2.600 & 2.645 \\
+indoor\_45\_13\_snapdragon & 2.462 & 2.001 & 1.916 & 1.880 & 1.901 \\
+indoor\_45\_14\_snapdragon & 2.620 & 2.414 & 2.453 & 2.528 & 2.685 \\
+outdoor\_forward\_1\_snapdragon & 2.194 & 1.576 & 1.560 & 1.537 & 1.593 \\
+\bottomrule
+\end{tabular}
+\end{table}
+\begin{table}[htbp]\centering
+\caption*{Table S1d. Flight-level multi-horizon RMSE for UZH-FPV$\rightarrow$EuRoC (\si{\metre\per\second\squared}).}
+\scriptsize
+\begin{tabular}{p{0.35\textwidth}rrrrr}
+\toprule
+Flight & Persistence & Ridge B3 & TCN & GRU & Transformer\\
+\midrule
+V1\_01\_easy & 0.564 & 0.541 & 0.549 & 0.510 & 0.512 \\
+V1\_02\_medium & 0.793 & 0.751 & 0.752 & 0.722 & 0.724 \\
+V1\_03\_difficult & 0.838 & 0.824 & 0.788 & 0.773 & 0.791 \\
+V2\_01\_easy & 1.130 & 0.948 & 0.951 & 0.950 & 0.948 \\
+V2\_02\_medium & 1.041 & 0.946 & 0.938 & 0.915 & 0.938 \\
+V2\_03\_difficult & 1.136 & 0.976 & 0.976 & 0.958 & 0.988 \\
+\bottomrule
+\end{tabular}
+\end{table}
+\section*{S2. Baseline and Ridge-sensitivity results}
+Table S2 makes the supplementary linear-extrapolation comparator and the two frozen Ridge variants explicit. The linear baseline is not a principal model because it is uniformly inferior to Persistence and Ridge in the frozen Stage-2 study. B2 uses $\qf$ only; B3 uses $[\qf,\qw]$. B3 is the primary Ridge comparator because source validation selected B3 for both source datasets.
+\begin{landscape}
+\begin{table}[htbp]\centering
+\caption*{Table S2. Frozen Stage-2 baseline and Ridge-sensitivity results. Intervals are 95\% sequence-bootstrap percentile intervals.}
+\scriptsize
+\begin{tabular}{llrrrrrr}
+\toprule
+Context & Model & Mean RMSE & CI low & CI high & 50 ms & 100 ms & 200 ms\\
+\midrule
+Within EuRoC & Persistence & 0.9170 & 0.7430 & 1.0694 & 0.7515 & 0.9114 & 1.0782 \\
+Within EuRoC & Linear extrapolation & 1.6187 & 1.2177 & 2.0414 & 0.9842 & 1.4821 & 2.4158 \\
+Within EuRoC & Ridge B2 q\_f & 0.7315 & 0.5867 & 0.8528 & 0.6456 & 0.7578 & 0.8205 \\
+Within EuRoC & Ridge B3 q\_f+q\_w & 0.7283 & 0.5826 & 0.8506 & 0.6429 & 0.7532 & 0.8166 \\
+Within UZH-FPV & Persistence & 2.3493 & 1.6376 & 3.0531 & 2.0383 & 2.5136 & 2.6545 \\
+Within UZH-FPV & Linear extrapolation & 5.1674 & 3.3528 & 6.8994 & 3.1512 & 4.7669 & 7.5539 \\
+Within UZH-FPV & Ridge B2 q\_f & 1.9808 & 1.4285 & 2.5688 & 1.8737 & 2.1295 & 2.1956 \\
+Within UZH-FPV & Ridge B3 q\_f+q\_w & 1.9431 & 1.3777 & 2.5266 & 1.8332 & 2.0947 & 2.1489 \\
+EuRoC$\rightarrow$UZH-FPV & Persistence & 2.3493 & 1.6376 & 3.0531 & 2.0383 & 2.5136 & 2.6545 \\
+EuRoC$\rightarrow$UZH-FPV & Linear extrapolation & 5.1674 & 3.3528 & 6.8994 & 3.1512 & 4.7669 & 7.5539 \\
+EuRoC$\rightarrow$UZH-FPV & Ridge B2 q\_f & 2.1061 & 1.5238 & 2.7460 & 1.8664 & 2.2409 & 2.4150 \\
+EuRoC$\rightarrow$UZH-FPV & Ridge B3 q\_f+q\_w & 2.0651 & 1.4839 & 2.6980 & 1.8444 & 2.2055 & 2.3698 \\
+UZH-FPV$\rightarrow$EuRoC & Persistence & 0.9170 & 0.7430 & 1.0694 & 0.7515 & 0.9114 & 1.0782 \\
+UZH-FPV$\rightarrow$EuRoC & Linear extrapolation & 1.6187 & 1.2177 & 2.0414 & 0.9842 & 1.4821 & 2.4158 \\
+UZH-FPV$\rightarrow$EuRoC & Ridge B2 q\_f & 0.8153 & 0.6622 & 0.9324 & 0.7177 & 0.8159 & 0.8910 \\
+UZH-FPV$\rightarrow$EuRoC & Ridge B3 q\_f+q\_w & 0.8308 & 0.7027 & 0.9361 & 0.6972 & 0.8347 & 0.9202 \\
+\bottomrule
+\end{tabular}
+\end{table}
+\end{landscape}
+\section*{S3. Paired advanced-model comparisons}
+Table S3 reports the paired flight-level comparison against the source-selected B3 Ridge reference. The bootstrap interval is the 95\% percentile interval of the mean paired difference using 10,000 flight-level resamples with seed 20260912. The exact sign-flip $p$ value is two-sided and exploratory; it is included as a discrete small-sample diagnostic rather than as the primary evidential basis.
+\begin{table}[htbp]\centering
+\caption*{Table S3. Advanced model minus source-selected Ridge B3. Negative $\Delta$ favors the advanced model.}
+\scriptsize
+\begin{tabular}{llrrrrrr}
+\toprule
+Context & Model & $n$ & Mean $\Delta$ & 95\% CI & Adv./Ridge wins & Exact sign-flip $p$\\
+\midrule
+Within EuRoC & TCN & 6 & +0.0069 & [-0.0051, 0.0157] & 1/5 & 0.281250 \\
+Within EuRoC & GRU & 6 & +0.0033 & [-0.0098, 0.0138] & 2/4 & 0.656250 \\
+Within EuRoC & Transformer & 6 & +0.0157 & [-0.0053, 0.0321] & 1/5 & 0.187500 \\
+Within UZH-FPV & TCN & 8 & -0.0230 & [-0.0469, 0.0027] & 6/2 & 0.171875 \\
+Within UZH-FPV & GRU & 8 & +0.0027 & [-0.0386, 0.0494] & 5/3 & 0.921875 \\
+Within UZH-FPV & Transformer & 8 & -0.0479 & [-0.0726, -0.0223] & 7/1 & 0.015625 \\
+EuRoC$\rightarrow$UZH-FPV & TCN & 8 & -0.0152 & [-0.0440, 0.0110] & 6/2 & 0.359375 \\
+EuRoC$\rightarrow$UZH-FPV & GRU & 8 & +0.0149 & [-0.0451, 0.0818] & 4/4 & 0.710938 \\
+EuRoC$\rightarrow$UZH-FPV & Transformer & 8 & +0.1324 & [0.0232, 0.2540] & 1/7 & 0.070312 \\
+UZH-FPV$\rightarrow$EuRoC & TCN & 6 & -0.0054 & [-0.0184, 0.0037] & 3/3 & 0.687500 \\
+UZH-FPV$\rightarrow$EuRoC & GRU & 6 & -0.0261 & [-0.0382, -0.0134] & 5/1 & 0.062500 \\
+UZH-FPV$\rightarrow$EuRoC & Transformer & 6 & -0.0139 & [-0.0261, -0.0001] & 5/1 & 0.156250 \\
+\bottomrule
+\end{tabular}
+\end{table}
+\section*{S4. Per-recording resampling audit}
+Table S4 reports the measured native timestamp rate and effective post-decimation rate for every retained recording. All processed timestamp sequences were monotonic. Nominal design rates were 200 Hz for EuRoC and 500 Hz for UZH-FPV, with integer decimation factors 2 and 5, respectively.
+\begin{landscape}
+\begin{longtable}{p{1.6cm}p{6.0cm}rrrrr}
+\multicolumn{7}{c}{\normalsize Table S4. Per-recording sampling-rate audit.}\\[0.4em]
+\toprule
+Dataset & Recording & Native rate (Hz) & Decim. & Effective rate (Hz) & Samples in & Samples out\\
+\midrule
+\endfirsthead
+\toprule
+Dataset & Recording & Native rate (Hz) & Decim. & Effective rate (Hz) & Samples in & Samples out\\
+\midrule
+\endhead
+EUROC & V1\_01\_easy & 200.002560 & 2 & 99.998720 & 29120 & 14460 \\
+EUROC & V1\_02\_medium & 200.002560 & 2 & 100.001280 & 17100 & 8450 \\
+EUROC & V1\_03\_difficult & 200.002560 & 2 & 100.001280 & 21500 & 10650 \\
+EUROC & V2\_01\_easy & 200.002560 & 2 & 100.001280 & 22800 & 11300 \\
+EUROC & V2\_02\_medium & 200.002560 & 2 & 100.000000 & 23490 & 11645 \\
+EUROC & V2\_03\_difficult & 200.002560 & 2 & 100.000000 & 23370 & 11585 \\
+UZH\_FPV & indoor\_forward\_6\_snapdragon & 500.036242 & 5 & 100.000095 & 34815 & 6863 \\
+UZH\_FPV & indoor\_forward\_9\_snapdragon & 500.036242 & 5 & 100.000095 & 38418 & 7583 \\
+UZH\_FPV & indoor\_forward\_10\_snapdragon & 500.036242 & 5 & 100.000095 & 38137 & 7527 \\
+UZH\_FPV & indoor\_45\_2\_snapdragon & 500.000000 & 5 & 100.000000 & 37339 & 7368 \\
+UZH\_FPV & indoor\_45\_4\_snapdragon & 500.000000 & 5 & 100.000000 & 33114 & 6523 \\
+UZH\_FPV & indoor\_45\_13\_snapdragon & 500.000000 & 5 & 100.000000 & 30969 & 6094 \\
+UZH\_FPV & indoor\_45\_14\_snapdragon & 500.000000 & 5 & 100.000000 & 32269 & 6354 \\
+UZH\_FPV & outdoor\_forward\_1\_snapdragon & 500.000000 & 5 & 100.000000 & 42878 & 8476 \\
+\bottomrule
+\end{longtable}
+\end{landscape}
+\section*{S5. Frozen source-model selection and equal-history Ridge sensitivity}
+Table S5a reports the source-only Ridge selections used to choose B3 as the primary linear comparator. Tables S5b--S5c report the post hoc fixed-100-lag B3 sensitivity designed to match the 1.0-s neural-model history without changing the primary results. Table S5d reports the selected advanced configurations and the three source-validation seed scores. The fixed-100-lag analysis retunes only $\alpha$ using the original source-only rules; no neural model is retrained and no target-domain data are used for tuning.
+\begin{table}[htbp]\centering
+\caption*{Table S5a. Source-only Ridge hyperparameter selections for transfer.}
+\small
+\begin{tabular}{llllrrr}
+\toprule
+Source & Model & Inputs & Lag & $\alpha$ & Val. RMSE & Tied minima\\
+\midrule
+EUROC & B2\_RIDGE\_QF & $q_f$ & 25 & 0.0001 & 0.746738 & 5 \\
+EUROC & B3\_RIDGE\_QF\_QW & $[q_f,q_\omega]$ & 25 & 0.0001 & 0.741675 & 4 \\
+UZH\_FPV & B2\_RIDGE\_QF & $q_f$ & 25 & 1 & 2.015532 & 4 \\
+UZH\_FPV & B3\_RIDGE\_QF\_QW & $[q_f,q_\omega]$ & 10 & 0.01 & 1.981208 & 3 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table*}[htbp]\centering
+\caption*{Table S5b. Post hoc equal-history sensitivity for B3 Ridge. Fixed100 uses lag = 100 samples (1.0 s) in every context, while $\alpha$ is selected using the original source-only validation procedure. $\Delta$ = fixed100 $-$ primary source-selected-lag B3 Ridge.}
+\small
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lccc}
+\toprule
+Context & Primary B3 RMSE [95\% CI] & Fixed100 B3 RMSE [95\% CI] & $\Delta$ \\
+\midrule
+Within EuRoC & 0.728256 [0.582642, 0.850571] & 0.748209 [0.606630, 0.863671] & +0.019953 \\
+Within UZH-FPV & 1.943141 [1.377703, 2.526565] & 1.956741 [1.385041, 2.559978] & +0.013601 \\
+EuRoC$\rightarrow$UZH-FPV & 2.065150 [1.483872, 2.698028] & 2.125632 [1.558536, 2.748705] & +0.060482 \\
+UZH-FPV$\rightarrow$EuRoC & 0.830804 [0.702719, 0.936093] & 0.842334 [0.701287, 0.952415] & +0.011530 \\
+\bottomrule
+\end{tabular}%
+}
+\end{table*}
+
+\begin{table*}[htbp]\centering
+\caption*{Table S5c. Selected-horizon equal-sequence RMSE for the fixed-100-lag B3 sensitivity, in m/s$^2$. The primary column is the source-selected-lag B3 Ridge used in the manuscript.}
+\small
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcc}
+\toprule
+Context & Primary B3: 50 / 100 / 200 ms & Fixed100 B3: 50 / 100 / 200 ms \\
+\midrule
+Within EuRoC & 0.642868 / 0.753203 / 0.816588 & 0.668633 / 0.765633 / 0.823503 \\
+Within UZH-FPV & 1.833155 / 2.094722 / 2.148914 & 1.887984 / 2.066537 / 2.121225 \\
+EuRoC$\rightarrow$UZH-FPV & 1.844445 / 2.205469 / 2.369796 & 1.881461 / 2.266810 / 2.445912 \\
+UZH-FPV$\rightarrow$EuRoC & 0.697231 / 0.834738 / 0.920151 & 0.755811 / 0.854300 / 0.906304 \\
+\bottomrule
+\end{tabular}%
+}
+\end{table*}
+
+\noindent For transfer with lag fixed at 100, source-only validation selects $\alpha=10^{-4}$ on EuRoC (validation RMSE 0.747376) and $\alpha=1$ on UZH-FPV (validation RMSE 1.999626). Within-domain leave-one-recording-out folds also keep lag fixed at 100 and select only $\alpha$ from $\{10^{-6},10^{-4},10^{-2},1,100\}$ using the training recordings of that fold. Complete fold-level choices are provided in \texttt{RIDGE\_B3\_FIXED\_LAG100\_SOURCE\_SELECTION.csv}; sequence-level results are provided in \texttt{RIDGE\_B3\_FIXED\_LAG100\_SEQUENCE\_RESULTS.csv}. No neural model was retrained, target data were not used for tuning, and the primary manuscript result files were not changed.
+
+\begin{table}[htbp]\centering
+\caption*{Table S5d. Source-frozen advanced-model selections.}
+
+
+\scriptsize
+\begin{tabular}{llllrrp{0.29\textwidth}}
+\toprule
+Source & Architecture & Config & Epochs & Params & Mean val. RMSE & Seed-specific val. RMSE\\
+\midrule
+EUROC & TCN & TCN12 & 23 & 16212 & 0.744297 & 0.7436980926,0.7445292651,0.7446628121 \\
+EUROC & GRU & GRU07 & 49 & 14356 & 0.730014 & 0.7321940818,0.7294541236,0.7283952801 \\
+EUROC & TRANSFORMER & TR12 & 66 & 13460 & 0.742333 & 0.7465817206,0.7369791745,0.7434378944 \\
+UZH\_FPV & TCN & TCN07 & 28 & 26516 & 1.917872 & 1.908943261,1.90713449,1.937539222 \\
+UZH\_FPV & GRU & GRU07 & 27 & 14356 & 1.932265 & 1.918400961,1.937484335,1.940911015 \\
+UZH\_FPV & TRANSFORMER & TR05 & 33 & 13460 & 1.907869 & 1.917059149,1.897076326,1.90947296 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section*{S6. Filter and artifact audit}
+The anti-aliasing filters were fixed before forecasting and implemented as causal elliptic IIR filters in SOS form, with a 30 Hz passband edge, 45 Hz stopband edge, at most 1 dB passband ripple, at least 60 dB stopband attenuation, and forward-only \texttt{sosfilt}. The 200 Hz EuRoC design is fifth order and is stored in three SOS rows, one containing a first-order denominator section; the 500 Hz UZH-FPV design is sixth order. The 200 Hz design has maximum pole radius 0.943485 and a relative impulse-response tail of $4.01\times10^{-6}$ after 1 s; the 500 Hz design has maximum pole radius 0.985014 and a relative tail of $1.54\times10^{-4}$. Exact SOS coefficients are reported in the main manuscript.
+\begin{table}[htbp]\centering
+\caption*{Table S6. Locked artifact identifiers available from the staged audit reports.}
+\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.31\textwidth}p{0.63\textwidth}}
+\toprule
+Artifact & SHA-256\\
+\midrule
+Protocol lock & {\scriptsize\ttfamily\seqsplit{b90e67caf7e44264ce02a3a2b6a9b9cd1925719b5201d0e77f1aafd4501defed}}\\
+Protocol YAML & {\scriptsize\ttfamily\seqsplit{8fd75b59e35aac291f597fb856ff1debfc9609cf7a52adf6fc0e3502bf3c0d7d}}\\
+Stage-2 source-model freeze & {\scriptsize\ttfamily\seqsplit{0aba0b20ddc30136de783b9f98a1a475915ee3ef20577e03efec8be1c15bb892}}\\
+Stage-3 advanced configuration & {\scriptsize\ttfamily\seqsplit{a8453474ea26a552f8414408e91456da78ebf63b4b88b90dbd950540f72e9700}}\\
+Stage-3 hyperparameter-grid artifact & {\scriptsize\ttfamily\seqsplit{c5105e181542ad6afa8457acb598709ce82603c15aae75800756098da2eb123f}}\\
+Stage-3 source freeze & {\scriptsize\ttfamily\seqsplit{f4be16be714f2e6ad6d9ec4628fe7346dbf2294713604b4c158f4771ac072bb0}}\\
+Stage-4 final results lock & {\scriptsize\ttfamily\seqsplit{25a0f4c6e512b8036dbe591e453f9cfff97e8a89389226d0b2fe5c61214cdb4c}}\\
+\bottomrule
+\end{tabular}
+\end{table}
+\section*{S7. Machine-readable files accompanying this revision}
+\begin{itemize}
+\item \texttt{Supplementary\_PerFlight\_Primary\_RMSE.csv}: flight-level primary RMSE for all four contexts.
+\item \texttt{Supplementary\_FlightLevel\_Paired\_Differences.csv}: every advanced-model minus Ridge B3 flight-level difference.
+\item \texttt{Supplementary\_Paired\_Tests.csv}: paired means, bootstrap intervals, win counts, and exact sign-flip values.
+\item \texttt{Supplementary\_Baseline\_and\_Ridge\_Sensitivity.csv}: Persistence, linear extrapolation, B2, and B3 summaries.
+\item \texttt{Supplementary\_Resampling\_Audit.csv}: per-recording rate and decimation audit.
+\item \texttt{Supplementary\_Ridge\_Hyperparameter\_Selection.csv}: all within-domain and source-transfer Ridge selections.
+\item \texttt{Supplementary\_Selected\_Advanced\_Models.csv}: frozen source-selected neural-model metadata and seed scores.
+\item \texttt{RIDGE\_B3\_FIXED\_LAG100\_SUMMARY.csv}: aggregate equal-history Ridge sensitivity with sequence-bootstrap intervals.
+\item \texttt{RIDGE\_B3\_FIXED\_LAG100\_SOURCE\_SELECTION.csv}: source-only and fold-wise $\alpha$ selections with lag fixed at 100.
+\item \texttt{RIDGE\_B3\_FIXED\_LAG100\_SEQUENCE\_RESULTS.csv}: sequence-level fixed-100-lag Ridge results at all 20 horizons.
+\end{itemize}
+\noindent The full Stage-3 candidate grid is identified by the SHA-256 value above and should be deposited with the final code repository. It is not reconstructed here from incomplete metadata.
+\end{document}

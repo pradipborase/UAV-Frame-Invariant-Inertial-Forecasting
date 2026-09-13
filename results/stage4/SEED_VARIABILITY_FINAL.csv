@@ -1,0 +1,13 @@
+context,model,n_seeds,mean_across_seeds,sd_across_seeds,min_seed,max_seed,range,notes
+WITHIN_EUROC,TCN,3,0.7351135509,0.002819638701,0.7324421499,0.7380611059,0.005618956,Random seeds assess training variability; flight sequences remain the inferential units.
+WITHIN_EUROC,GRU,3,0.7315832077,0.000579843714,0.7309330766,0.7320468946,0.001113818,Random seeds assess training variability; flight sequences remain the inferential units.
+WITHIN_EUROC,Transformer,3,0.743946612,0.00549942395,0.7395745836,0.7501210707,0.0105464871,Random seeds assess training variability; flight sequences remain the inferential units.
+WITHIN_UZH,TCN,3,1.920120799,0.02221625314,1.901539409,1.944728506,0.043189097,Random seeds assess training variability; flight sequences remain the inferential units.
+WITHIN_UZH,GRU,3,1.945816705,0.002979612802,1.942809398,1.948767829,0.005958431,Random seeds assess training variability; flight sequences remain the inferential units.
+WITHIN_UZH,Transformer,3,1.895225547,0.004148660113,1.89113075,1.89942605,0.0082953,Random seeds assess training variability; flight sequences remain the inferential units.
+EUROC_TO_UZH,TCN,3,2.049908945,0.0112441115,2.040396444,2.062317926,0.021921482,Random seeds assess training variability; flight sequences remain the inferential units.
+EUROC_TO_UZH,GRU,3,2.080038328,0.004474593559,2.07507763,2.083769914,0.008692284,Random seeds assess training variability; flight sequences remain the inferential units.
+EUROC_TO_UZH,Transformer,3,2.197584952,0.01814081245,2.184373868,2.218268474,0.033894606,Random seeds assess training variability; flight sequences remain the inferential units.
+UZH_TO_EUROC,TCN,3,0.8253822249,0.008595223929,0.8172076939,0.8343439808,0.0171362869,Random seeds assess training variability; flight sequences remain the inferential units.
+UZH_TO_EUROC,GRU,3,0.8047074577,0.007543805197,0.7970893448,0.8121746918,0.015085347,Random seeds assess training variability; flight sequences remain the inferential units.
+UZH_TO_EUROC,Transformer,3,0.8168786727,0.01026300624,0.8058792681,0.8261979458,0.0203186777,Random seeds assess training variability; flight sequences remain the inferential units.

@@ -1,0 +1,3 @@
+utc=2026-09-12T17:58:16Z
+configs/stage2_baselines.yaml sha256=0073b683fa0420810c8225be00fb649f11c3616949f07b4b97bae710700a4561
+phase=2A_pre_transfer

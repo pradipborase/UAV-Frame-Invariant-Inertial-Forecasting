@@ -1,0 +1,182 @@
+
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{setspace}
+\usepackage{parskip}
+\usepackage{enumitem}
+\usepackage{amsmath,amssymb}
+\usepackage{siunitx}
+\usepackage{microtype}
+\usepackage{hyperref}
+\hypersetup{hidelinks}
+\setstretch{1.12}
+
+\begin{document}
+
+\begin{center}
+{\LARGE\bfseries Response to Reviewer Technical Comments}
+
+\vspace{0.7em}
+{\large\itshape A Frame-Invariant Evaluation Protocol for Cross-Platform Short-Horizon UAV Inertial Forecasting}
+
+\vspace{0.4em}
+Pradip Diwan Borase and Vijyant Agarwal\\
+Department of Mechanical Engineering, Netaji Subhas University of Technology, New Delhi, India
+\end{center}
+
+\bigskip
+
+Dear Reviewer,
+
+\medskip
+
+We thank you for the careful technical review. The comments identified two important reporting/fairness issues: (i) the actual order of the causal elliptic anti-alias filters, and (ii) the distinction between the common 100-sample candidate history and the shorter source-selected effective history used by Ridge. We audited the executed preprocessing and Ridge-selection code, corrected the manuscript and Supplementary Material, and added a new fixed-100-lag Ridge sensitivity analysis. No neural model was retrained, no target-domain information was used for tuning, and the primary neural-model result files were not altered.
+
+The detailed responses are provided below.
+
+\bigskip
+\hrule
+\bigskip
+
+\section*{Comment 1: Filter-order inconsistency}
+
+\noindent
+\textbf{Reviewer comment:}
+
+\begin{quote}
+\itshape
+``There is a concrete filter-order inconsistency that must be resolved before publication. The manuscript describes the preprocessing as a `sixth-order causal elliptic IIR' design and reports an IIR order of 6 for both datasets. However, the published 200-Hz EuRoC coefficients correspond to the standard fifth-order elliptic solution for the stated 30-Hz passband, 45-Hz stopband, 1-dB ripple and 60-dB stopband attenuation; the 500-Hz UZH design is sixth order. The first EuRoC SOS also contains $a_2=0$, consistent with the odd-order design. The actual coefficients are reported in the paper. This appears to be a documentation/order-reporting error rather than necessarily an error in the numerical experiments, but it must be audited. The authors should state exactly which filters were executed in the experiments. If the published coefficients were used, correct all references to `sixth order' and Table 2 accordingly; if a sixth-order EuRoC filter was intended, the experiments may need regeneration.''
+\end{quote}
+
+\subsection*{Response}
+
+We agree with the reviewer. The filter-order label for EuRoC was incorrect, and we performed a code-level audit to determine whether this was only a documentation error or whether the numerical preprocessing itself was inconsistent.
+
+The preprocessing code designs the filters using SciPy's elliptic IIR design with the locked specification:
+\begin{itemize}[leftmargin=*]
+    \item passband edge: \SI{30}{\hertz};
+    \item stopband edge: \SI{45}{\hertz};
+    \item maximum passband ripple: \SI{1}{\decibel};
+    \item minimum stopband attenuation: \SI{60}{\decibel};
+    \item implementation: causal forward-only SOS filtering.
+\end{itemize}
+
+The audit confirmed that the \SI{200}{\hertz} EuRoC design is \textbf{fifth order}, whereas the \SI{500}{\hertz} UZH-FPV design is \textbf{sixth order}. The fifth-order EuRoC transfer function is represented by three SOS rows because one row contains a first-order denominator section; this is visible in the reported EuRoC coefficient row with $a_2=0$.
+
+The origin of the reporting error was a metadata calculation that inferred filter order as twice the number of SOS rows. That rule incorrectly labels an odd-order filter stored in padded SOS form as even order. Importantly, the actual preprocessing pipeline passed the designed SOS coefficients directly to the causal filtering routine. Therefore, the coefficients printed in the manuscript are the coefficients that were executed in the experiments.
+
+\paragraph{Changes made.}
+We have:
+\begin{enumerate}[leftmargin=*]
+    \item changed the EuRoC IIR order in the preprocessing audit table from 6 to \textbf{5};
+    \item retained the UZH-FPV IIR order as \textbf{6};
+    \item revised Section 4.1 to state explicitly that the EuRoC design is fifth order and the UZH-FPV design is sixth order;
+    \item revised the SOS-table caption so that it no longer describes both designs as sixth order;
+    \item retained the exact published coefficients, pole radii, warm-up duration, and impulse-response-tail values because those quantities correspond to the filters actually executed; and
+    \item added the same correction to the Supplementary Material and repository audit documentation.
+\end{enumerate}
+
+No processed signal, trained model, prediction, primary RMSE, confidence interval, or scientific conclusion was changed by this correction. We therefore confirm that \textbf{the numerical forecasting experiments do not require regeneration}.
+
+\bigskip
+\hrule
+\bigskip
+
+\section*{Comment 2: Input-history inconsistency and equal-history Ridge comparison}
+
+\noindent
+\textbf{Reviewer comment:}
+
+\begin{quote}
+\itshape
+``There is an inconsistency in the description of the input history. Section 4.2 says that `every model uses a 1.0 s history (100 samples),' whereas the selected Ridge configurations use lag 25 for EuRoC and lag 10 for UZH-FPV. The neural models explicitly receive 100 samples. Either the description is inaccurate, or Ridge receives a 100-sample candidate history but uses only a tuned suffix. Please clarify. I would also recommend adding a 100-lag Ridge sensitivity result, because otherwise part of the comparison between `linear' and `complex temporal' models is confounded with different effective history lengths.''
+\end{quote}
+
+\subsection*{Response}
+
+We agree with the reviewer. The previous wording was imprecise because it did not distinguish between the \textbf{common candidate history window} and the \textbf{effective history used by a source-selected Ridge model}.
+
+The corrected protocol is now stated as follows:
+
+\begin{itemize}[leftmargin=*]
+    \item Every prediction origin is constructed with a common \SI{1.0}{\second} candidate history, i.e. 100 samples at \SI{100}{\hertz}.
+    \item TCN, GRU, and Transformer consume all 100 samples.
+    \item Ridge is given access to the same candidate window but uses only the most recent $\ell$ samples.
+    \item Ridge lag is a source-only hyperparameter selected from the predeclared grid
+    \[
+        \ell\in\{10,25,50,100\}.
+    \]
+    \item The source-selected B3 Ridge uses $\ell=25$ for EuRoC and $\ell=10$ for UZH-FPV.
+\end{itemize}
+
+Thus, the shorter Ridge histories were not imposed by design; they were selected from a candidate set that already included the same 100-sample history available to the neural models.
+
+\subsection*{New fixed-100-lag sensitivity analysis}
+
+To address the reviewer's fairness concern directly, we added a post hoc equal-history benchmark in which B3 Ridge is forced to use \textbf{lag = 100 samples} (\SI{1.0}{\second}) in all four evaluation contexts. Only $\alpha$ is retuned over the original predeclared grid
+\[
+\{10^{-6},10^{-4},10^{-2},1,100\}
+\]
+using the same source-only validation rules as the primary study.
+
+For within-domain leave-one-recording-out evaluation, $\alpha$ is selected using only the training recordings of that fold. For zero-shot transfer, $\alpha$ is selected on the source dataset only, after which the scaler and Ridge model are frozen and applied to the target dataset unchanged. No neural architecture is retrained.
+
+The resulting equal-sequence multi-horizon RMSE values are:
+
+\begin{center}
+\begin{tabular}{lccc}
+\hline
+Context & Primary B3 Ridge & Fixed-100 B3 Ridge & $\Delta$ \\
+\hline
+Within EuRoC & 0.728256 & 0.748209 & +0.019953 \\
+Within UZH-FPV & 1.943141 & 1.956741 & +0.013601 \\
+EuRoC$\rightarrow$UZH-FPV & 2.065150 & 2.125632 & +0.060482 \\
+UZH-FPV$\rightarrow$EuRoC & 0.830804 & 0.842334 & +0.011530 \\
+\hline
+\end{tabular}
+\end{center}
+
+All values are in \si{\metre\per\second\squared}; $\Delta$ is fixed-100-lag RMSE minus the primary source-selected-lag Ridge RMSE. The corresponding 95\% sequence-bootstrap intervals are reported in the revised manuscript and Supplementary Material.
+
+The fixed-100-lag benchmark is worse than the primary source-selected Ridge in all four aggregate comparisons. This demonstrates that Ridge was not advantaged simply because the full 1.0-s history was unavailable to it. Instead, source-only validation selected shorter effective histories because they generalized better for the linear model.
+
+At the same time, we have moderated the interpretation. Within EuRoC, forcing Ridge to use the full 100-sample history makes the compact nonlinear models comparatively more favorable. We therefore state explicitly that part of Ridge's primary competitiveness reflects legitimate source-side tuning of its effective memory length, rather than an intrinsic property of linearity alone.
+
+\paragraph{Changes made.}
+We have:
+\begin{enumerate}[leftmargin=*]
+    \item rewritten Section 4.2 to distinguish the common 100-sample candidate window from Ridge's source-selected effective suffix;
+    \item stated the full Ridge lag grid explicitly;
+    \item added a dedicated Methods paragraph describing the fixed-100-lag sensitivity protocol;
+    \item added a Results subsection and table containing the fixed-100-lag RMSE values and sequence-bootstrap intervals;
+    \item added selected 50/100/200-ms fixed-100-lag results, fold/source $\alpha$ selections, and sequence-level outputs to the Supplementary Material;
+    \item revised the Discussion and Conclusion so that the linear-versus-nonlinear interpretation reflects this equal-history check; and
+    \item added the machine-readable files
+    \texttt{RIDGE\_B3\_FIXED\_LAG100\_SUMMARY.csv},
+    \texttt{RIDGE\_B3\_FIXED\_LAG100\_SOURCE\_SELECTION.csv}, and
+    \texttt{RIDGE\_B3\_FIXED\_LAG100\_SEQUENCE\_RESULTS.csv}
+    to the reproducibility package.
+\end{enumerate}
+
+We emphasize that \textbf{no neural model was retrained}, \textbf{target-domain data were not used for tuning}, and \textbf{the primary manuscript result files were not changed} by this sensitivity analysis.
+
+\bigskip
+\hrule
+\bigskip
+
+\section*{Summary of the technical corrections}
+
+The two comments led to corrections that improve transparency without changing the central scientific conclusion:
+
+\begin{itemize}[leftmargin=*]
+    \item the executed EuRoC anti-alias filter is now correctly reported as fifth order, and the UZH-FPV filter as sixth order;
+    \item the input-history description now distinguishes a common 100-sample candidate history from Ridge's source-selected effective lag;
+    \item an explicit fixed-100-lag Ridge benchmark has been added;
+    \item the equal-history result modestly favors nonlinear models relative to the primary tuned Ridge but does not produce a single architecture that dominates all domains; and
+    \item all corrections and sensitivity outputs are documented in the Supplementary Material and reproducibility package.
+\end{itemize}
+
+We thank the reviewer for identifying both issues. These comments materially improved the precision, fairness, and reproducibility of the manuscript.
+
+\end{document}

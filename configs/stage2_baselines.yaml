@@ -1,0 +1,45 @@
+# Stage 2 baseline forecasting configuration.
+# PRE-SPECIFIED before target transfer. Do not retune after seeing transfer RMSE.
+# This file is hashed; changing it after Phase 2A is a protocol violation.
+
+stage: 2
+project_name: UAV_MEASUREMENT_FRESH
+terminology: PRE_SPECIFIED_LOCKED_PROTOCOL
+
+lookback_samples: 100
+horizon_samples: 20
+stride_samples: 5
+linear_k: 10
+dt_s: 0.01
+
+lags: [10, 25, 50, 100]
+alphas: [1.0e-6, 1.0e-4, 1.0e-2, 1.0, 100.0]
+
+bootstrap_reps: 10000
+bootstrap_seed: 20260912
+tie_relative_tol: 0.01
+high_qf_percentile: 95.0
+report_horizon_samples: [5, 10, 20]
+
+models:
+  - B0_PERSISTENCE
+  - B1_LINEAR
+  - B2_RIDGE_QF
+  - B3_RIDGE_QF_QW
+
+scaler:
+  type: equal_recording_weighted_standard_scaler
+  features: SOURCE_TRAIN_WINDOWS_ONLY
+  targets: NONE
+  fit_scope: SOURCE_TRAIN_ONLY
+
+ridge:
+  fit_intercept: true
+  solver: auto
+  output: direct_multioutput_h20
+  recursive: false
+
+training_weights: equal_recording
+
+selection_objective: equal_validation_sequence_mean_multihorizon_RMSE
+tie_break: shorter_lag_then_larger_alpha

@@ -1,0 +1,25 @@
+{
+  "decision": "CONDITIONAL_PASS",
+  "utc": "2026-09-12T16:56:32Z",
+  "n_euroc_audited": 6,
+  "n_euroc_primary": 6,
+  "n_uzh_pass": 8,
+  "overall_compat": "COMPARABLE_FOR_SELECTED_QUANTITIES_ONLY",
+  "measurand": {
+    "recommended": "3-axis accelerometer specific force in each dataset's native IMU sensor frame (EuRoC a_RS_S; UZH lin_acc_*), SI unit m/s^2",
+    "confidence": "HIGH"
+  },
+  "flags": {
+    "fields_ok": true,
+    "units_ok": true,
+    "quantity_ok": true,
+    "frames_ok": true,
+    "rates_ok": true,
+    "gt_ok": true,
+    "overlap_ok": true,
+    "no_critical": true,
+    "euroc_hashed": true,
+    "uzh_ok": true,
+    "downloaded": true
+  }
+}

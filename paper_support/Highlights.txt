@@ -1,0 +1,7 @@
+Highlights
+
+• Frame-invariant UAV IMU forecasting avoids target-fitted axis alignment.
+• Source-only freezing enables leakage-controlled cross-platform evaluation.
+• Flight-level inference avoids inflation from overlapping forecast windows.
+• Ridge remains competitive with TCN, GRU and Transformer under transfer.
+• Added model complexity does not ensure better zero-shot generalization.

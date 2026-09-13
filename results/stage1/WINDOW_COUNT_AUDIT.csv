@@ -1,0 +1,15 @@
+dataset,sequence_id,processed_samples,candidate_origins,valid_origins,excluded_due_to_start,excluded_due_to_end,excluded_due_to_gap,excluded_other,lookback_samples,horizon_samples,stride_samples
+EUROC,V1_01_easy,14460,2892,2868,20,4,0,0,100,20,5
+EUROC,V1_02_medium,8450,1690,1666,20,4,0,0,100,20,5
+EUROC,V1_03_difficult,10650,2130,2106,20,4,0,0,100,20,5
+EUROC,V2_01_easy,11300,2260,2236,20,4,0,0,100,20,5
+EUROC,V2_02_medium,11645,2329,2305,20,4,0,0,100,20,5
+EUROC,V2_03_difficult,11585,2317,2293,20,4,0,0,100,20,5
+UZH_FPV,indoor_forward_6_snapdragon,6863,1373,1349,20,4,0,0,100,20,5
+UZH_FPV,indoor_forward_9_snapdragon,7583,1517,1493,20,4,0,0,100,20,5
+UZH_FPV,indoor_forward_10_snapdragon,7527,1506,1482,20,4,0,0,100,20,5
+UZH_FPV,indoor_45_2_snapdragon,7368,1474,1450,20,4,0,0,100,20,5
+UZH_FPV,indoor_45_4_snapdragon,6523,1305,1281,20,4,0,0,100,20,5
+UZH_FPV,indoor_45_13_snapdragon,6094,1219,1195,20,4,0,0,100,20,5
+UZH_FPV,indoor_45_14_snapdragon,6354,1271,1247,20,4,0,0,100,20,5
+UZH_FPV,outdoor_forward_1_snapdragon,8476,1696,1672,20,4,0,0,100,20,5

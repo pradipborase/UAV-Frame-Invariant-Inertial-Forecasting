@@ -1,0 +1,4 @@
+item,euroc,uzh_fpv,common_body_possible,fixed_from_official_calibration,target_test_fit_required,alignment_arbitrary_or_learned,evidence,notes
+IMU sensor frame,S,S (Snapdragon),NO_SHARED_OFFICIAL_BODY,EUROC_YES_UZH_PARTIAL_CAM_IMU_ONLY,NO,would be arbitrary if invented,sensor.yaml T_BS; UZH Kalibr T_cam_imu,names coincide; physical axes do not
+body frame,B via T_BS,vehicle CAD UNRESOLVED,NO,NO,NO,learned alignment prohibited,Stage 0 FRAME_AUDIT; EuRoC YAML,
+sensor to body,T_BS maps sensor-frame coordinates to body-frame coordinates (S -> B),UNRESOLVED for vehicle body,NO,EUROC_ONLY,NO,NO_FIT_PERFORMED,dataset_plot_body.m; sensor.yaml,streams not rotated

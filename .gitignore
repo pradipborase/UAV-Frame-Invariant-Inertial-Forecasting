@@ -1,0 +1,15 @@
+.venv/
+venv/
+__pycache__/
+*.pyc
+.env
+data/raw/
+data/cache/
+data/processed/
+artifacts/
+*.pt
+*.pth
+*.ckpt
+.DS_Store
+Thumbs.db
+.pytest_cache/

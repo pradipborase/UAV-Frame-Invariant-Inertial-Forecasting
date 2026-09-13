@@ -1,0 +1,85 @@
+# Authoritative source registry for Stage 0.
+# Unofficial mirrors are forbidden. If an official host is down, record
+# OFFICIAL_SOURCE_TEMPORARILY_UNAVAILABLE and do not substitute.
+
+access_date_utc_recorded_at_runtime: true
+
+blackbird:
+  dataset_name: MIT Blackbird UAV Dataset
+  official_institution: MIT AERA (Autonomy and Embedded Robotics Accelerated), Massachusetts Institute of Technology
+  official_website_dataset: http://blackbird-dataset.mit.edu/
+  official_data_root: http://blackbird-dataset.mit.edu/BlackbirdDatasetData/
+  official_lab_website: https://aera.mit.edu/
+  official_repository: https://github.com/mit-aera/Blackbird-Dataset
+  official_repository_owner: mit-aera
+  publications:
+    - title: "The Blackbird UAV dataset"
+      venue: The International Journal of Robotics Research
+      doi: "10.1177/0278364920908331"
+      year: 2020
+    - title: "The Blackbird Dataset: A large-scale dataset for UAV perception in aggressive flight"
+      venue: 2018 International Symposium on Experimental Robotics (ISER)
+      doi: "10.1007/978-3-030-33950-0_12"
+      arxiv: "1810.01987"
+      year: 2018
+  license_tools: MIT License (GitHub LICENSE.md, copyright 2022 mit-aera)
+  license_data: UNRESOLVED from currently accessible official pages; tools repo license does not by itself prove data license
+  download_mechanism: official sequenceDownloader.py HTTP GET from blackbird-dataset.mit.edu/BlackbirdDatasetData; Stage 0B also probes official S3 https://ijrr-blackbird-dataset.s3.amazonaws.com/BlackbirdDatasetData/ (websiteUtils/index.html BUCKET_URL)
+  official_s3_bucket: https://ijrr-blackbird-dataset.s3.amazonaws.com
+  official_s3_accelerate: http://ijrr-blackbird-dataset.s3-accelerate.amazonaws.com
+  official_s3_key_prefix: BlackbirdDatasetData/
+  known_availability_warning: Official dataset hostname did not resolve during Stage 0; GitHub issues 30–32 report the download site down since at least 2024-09. Stage 0B official S3 REST bucket is reachable but anonymous GetObject returned 403 AccessDenied.
+  known_ground_truth_limitations: OptiTrack 6D pose; IMU–GT sync guaranteed only to ±5 ms; GT is pose, not acceleration.
+  do_not_use:
+    - Kaggle
+    - AcademicTorrents
+    - unofficial GitHub mirrors
+    - third-party preprocessed ML dumps
+
+uzh_fpv:
+  dataset_name: UZH-FPV Drone Racing Dataset
+  official_institution: Robotics and Perception Group, University of Zurich / ETH Zurich
+  official_website: https://fpv.ifi.uzh.ch/
+  official_dataset_files: https://fpv.ifi.uzh.ch/datasets/
+  official_lab_page: https://rpg.ifi.uzh.ch/research_drone_racing.html
+  official_data_host: http://rpg.ifi.uzh.ch/datasets/uzh-fpv/
+  official_data_host_v3: http://rpg.ifi.uzh.ch/datasets/uzh-fpv-newer-versions/v3/
+  official_calib_root: http://rpg.ifi.uzh.ch/datasets/uzh-fpv/calib/
+  official_leica_raw_root: http://rpg.ifi.uzh.ch/datasets/uzh-fpv-newer-versions/raw/
+  official_accompanying_code: https://github.com/uzh-rpg/uzh_fpv_open
+  publications:
+    - title: "Are We Ready for Autonomous Drone Racing? The UZH-FPV Drone Racing Dataset"
+      venue: IEEE International Conference on Robotics and Automation (ICRA)
+      year: 2019
+      pdf: https://rpg.ifi.uzh.ch/docs/ICRA19_Delmerico.pdf
+      doi: "10.1109/ICRA.2019.8793887"
+  license: Creative Commons Attribution-NonCommercial-ShareAlike 3.0 (CC BY-NC-SA 3.0)
+  download_mechanism: HTTP GET of official zip/bag/calib/leica archives linked from fpv.ifi.uzh.ch/datasets/
+  known_availability_warning: None observed for rpg.ifi.uzh.ch during Stage 0. Prefer v3 archives because the official changelog (30 Mar 2020) states ground truths were re-uploaded after a time-offset issue.
+  known_ground_truth_limitations: >
+    Leica Nova MS60 provides prism position only. Public 6-DoF ground truth is produced
+    by batch optimization that uses Leica positions AND onboard IMU. Several sequences
+    have GROUND_TRUTH_WITHHELD for the benchmark. GT files are pose, not acceleration.
+  text_vs_rosbag_official_statement: >
+    Official dataset page states text files and rosbags have identical content.
+    Stage 0 treats that as a documentation claim and still inspects the downloaded
+    representation rather than assuming field-level identity without files.
+  do_not_use:
+    - unofficial GT for withheld benchmark sequences
+    - Kaggle
+    - third-party reprocessed dumps
+
+probe_urls:
+  blackbird:
+    - http://blackbird-dataset.mit.edu/
+    - http://blackbird-dataset.mit.edu/BlackbirdDatasetData/
+    - https://github.com/mit-aera/Blackbird-Dataset
+    - https://aera.mit.edu/publications
+    - https://doi.org/10.1177/0278364920908331
+  uzh_fpv:
+    - https://fpv.ifi.uzh.ch/
+    - https://fpv.ifi.uzh.ch/datasets/
+    - http://rpg.ifi.uzh.ch/datasets/uzh-fpv-newer-versions/v3/indoor_forward_6_snapdragon_with_gt.zip
+    - http://rpg.ifi.uzh.ch/datasets/uzh-fpv/calib/indoor_forward_calib_snapdragon.zip
+    - https://github.com/uzh-rpg/uzh_fpv_open
+    - https://rpg.ifi.uzh.ch/docs/ICRA19_Delmerico.pdf

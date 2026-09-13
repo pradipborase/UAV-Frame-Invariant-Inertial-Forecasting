@@ -1,0 +1,55 @@
+sequence_id,check_id,category,severity,status,observed,expected_or_rule,interpretation,action_required
+V1_01_easy,ZIP_VALID,archive,INFO,PASS,testzip_ok,zipfile.testzip is None,Official inner zip readable.,none
+V1_01_easy,CSV_READABLE,imu,CRITICAL,PASS,"n=29120 header=#timestamp [ns],w_RS_S_x [rad s^-1],w_RS_S_y [rad s^-1],w_RS_S_z [rad s^-1],a_RS_S_x [m s^-2],a_RS_S_y [m s^-2],a_RS_S_z",readable CSV with header,IMU table parsed.,none
+V1_01_easy,YAML_READABLE,calibration,INFO,PASS,data\cache\euroc\V1_01_easy\mav0\imu0\sensor.yaml,imu0/sensor.yaml,Calibration YAML present.,none
+V1_01_easy,REQUIRED_COLUMNS,imu,CRITICAL,PASS,HEADER_MAPPED,timestamp + 3 gyro + 3 accel,Header mapping.,none
+V1_01_easy,NAN_INF,imu,INFO,PASS,"{'accel_nan': 0, 'accel_inf': 0, 'gyro_nan': 0, 'gyro_inf': 0, 'accel_constant': False, 'gyro_constant': False, 'finite_fraction_required': 1.0}",>=99% finite required IMU samples,Finite-sample check.,none
+V1_01_easy,MONOTONIC_TS,timestamps,INFO,PASS,backward=0 dup=0,strictly increasing timestamps preferred,Native IMU timestamps.,none
+V1_01_easy,CONSTANT_CHANNELS,imu,INFO,PASS,accel_constant=False gyro_constant=False,non-constant IMU channels,Degenerate stream check.,none
+V1_01_easy,GT_READABLE,ground_truth,CRITICAL,PASS,n=28712 file=data.csv,GT CSV readable,GT table parsed.,none
+V1_01_easy,GT_OVERLAP,ground_truth,INFO,PASS,143.555000064,>=20 s IMU-GT overlap,Temporal overlap on native timestamps (no interpolation).,none
+V1_02_medium,ZIP_VALID,archive,INFO,PASS,testzip_ok,zipfile.testzip is None,Official inner zip readable.,none
+V1_02_medium,CSV_READABLE,imu,CRITICAL,PASS,"n=17100 header=#timestamp [ns],w_RS_S_x [rad s^-1],w_RS_S_y [rad s^-1],w_RS_S_z [rad s^-1],a_RS_S_x [m s^-2],a_RS_S_y [m s^-2],a_RS_S_z",readable CSV with header,IMU table parsed.,none
+V1_02_medium,YAML_READABLE,calibration,INFO,PASS,data\cache\euroc\V1_02_medium\mav0\imu0\sensor.yaml,imu0/sensor.yaml,Calibration YAML present.,none
+V1_02_medium,REQUIRED_COLUMNS,imu,CRITICAL,PASS,HEADER_MAPPED,timestamp + 3 gyro + 3 accel,Header mapping.,none
+V1_02_medium,NAN_INF,imu,INFO,PASS,"{'accel_nan': 0, 'accel_inf': 0, 'gyro_nan': 0, 'gyro_inf': 0, 'accel_constant': False, 'gyro_constant': False, 'finite_fraction_required': 1.0}",>=99% finite required IMU samples,Finite-sample check.,none
+V1_02_medium,MONOTONIC_TS,timestamps,INFO,PASS,backward=0 dup=0,strictly increasing timestamps preferred,Native IMU timestamps.,none
+V1_02_medium,CONSTANT_CHANNELS,imu,INFO,PASS,accel_constant=False gyro_constant=False,non-constant IMU channels,Degenerate stream check.,none
+V1_02_medium,GT_READABLE,ground_truth,CRITICAL,PASS,n=16702 file=data.csv,GT CSV readable,GT table parsed.,none
+V1_02_medium,GT_OVERLAP,ground_truth,INFO,PASS,83.504999936,>=20 s IMU-GT overlap,Temporal overlap on native timestamps (no interpolation).,none
+V1_03_difficult,ZIP_VALID,archive,INFO,PASS,testzip_ok,zipfile.testzip is None,Official inner zip readable.,none
+V1_03_difficult,CSV_READABLE,imu,CRITICAL,PASS,"n=21500 header=#timestamp [ns],w_RS_S_x [rad s^-1],w_RS_S_y [rad s^-1],w_RS_S_z [rad s^-1],a_RS_S_x [m s^-2],a_RS_S_y [m s^-2],a_RS_S_z",readable CSV with header,IMU table parsed.,none
+V1_03_difficult,YAML_READABLE,calibration,INFO,PASS,data\cache\euroc\V1_03_difficult\mav0\imu0\sensor.yaml,imu0/sensor.yaml,Calibration YAML present.,none
+V1_03_difficult,REQUIRED_COLUMNS,imu,CRITICAL,PASS,HEADER_MAPPED,timestamp + 3 gyro + 3 accel,Header mapping.,none
+V1_03_difficult,NAN_INF,imu,INFO,PASS,"{'accel_nan': 0, 'accel_inf': 0, 'gyro_nan': 0, 'gyro_inf': 0, 'accel_constant': False, 'gyro_constant': False, 'finite_fraction_required': 1.0}",>=99% finite required IMU samples,Finite-sample check.,none
+V1_03_difficult,MONOTONIC_TS,timestamps,INFO,PASS,backward=0 dup=0,strictly increasing timestamps preferred,Native IMU timestamps.,none
+V1_03_difficult,CONSTANT_CHANNELS,imu,INFO,PASS,accel_constant=False gyro_constant=False,non-constant IMU channels,Degenerate stream check.,none
+V1_03_difficult,GT_READABLE,ground_truth,CRITICAL,PASS,n=20932 file=data.csv,GT CSV readable,GT table parsed.,none
+V1_03_difficult,GT_OVERLAP,ground_truth,INFO,PASS,104.65500006399999,>=20 s IMU-GT overlap,Temporal overlap on native timestamps (no interpolation).,none
+V2_01_easy,ZIP_VALID,archive,INFO,PASS,testzip_ok,zipfile.testzip is None,Official inner zip readable.,none
+V2_01_easy,CSV_READABLE,imu,CRITICAL,PASS,"n=22800 header=#timestamp [ns],w_RS_S_x [rad s^-1],w_RS_S_y [rad s^-1],w_RS_S_z [rad s^-1],a_RS_S_x [m s^-2],a_RS_S_y [m s^-2],a_RS_S_z",readable CSV with header,IMU table parsed.,none
+V2_01_easy,YAML_READABLE,calibration,INFO,PASS,data\cache\euroc\V2_01_easy\mav0\imu0\sensor.yaml,imu0/sensor.yaml,Calibration YAML present.,none
+V2_01_easy,REQUIRED_COLUMNS,imu,CRITICAL,PASS,HEADER_MAPPED,timestamp + 3 gyro + 3 accel,Header mapping.,none
+V2_01_easy,NAN_INF,imu,INFO,PASS,"{'accel_nan': 0, 'accel_inf': 0, 'gyro_nan': 0, 'gyro_inf': 0, 'accel_constant': False, 'gyro_constant': False, 'finite_fraction_required': 1.0}",>=99% finite required IMU samples,Finite-sample check.,none
+V2_01_easy,MONOTONIC_TS,timestamps,INFO,PASS,backward=0 dup=0,strictly increasing timestamps preferred,Native IMU timestamps.,none
+V2_01_easy,CONSTANT_CHANNELS,imu,INFO,PASS,accel_constant=False gyro_constant=False,non-constant IMU channels,Degenerate stream check.,none
+V2_01_easy,GT_READABLE,ground_truth,CRITICAL,PASS,n=22401 file=data.csv,GT CSV readable,GT table parsed.,none
+V2_01_easy,GT_OVERLAP,ground_truth,INFO,PASS,112.0,>=20 s IMU-GT overlap,Temporal overlap on native timestamps (no interpolation).,none
+V2_02_medium,ZIP_VALID,archive,INFO,PASS,testzip_ok,zipfile.testzip is None,Official inner zip readable.,none
+V2_02_medium,CSV_READABLE,imu,CRITICAL,PASS,"n=23490 header=#timestamp [ns],w_RS_S_x [rad s^-1],w_RS_S_y [rad s^-1],w_RS_S_z [rad s^-1],a_RS_S_x [m s^-2],a_RS_S_y [m s^-2],a_RS_S_z",readable CSV with header,IMU table parsed.,none
+V2_02_medium,YAML_READABLE,calibration,INFO,PASS,data\cache\euroc\V2_02_medium\mav0\imu0\sensor.yaml,imu0/sensor.yaml,Calibration YAML present.,none
+V2_02_medium,REQUIRED_COLUMNS,imu,CRITICAL,PASS,HEADER_MAPPED,timestamp + 3 gyro + 3 accel,Header mapping.,none
+V2_02_medium,NAN_INF,imu,INFO,PASS,"{'accel_nan': 0, 'accel_inf': 0, 'gyro_nan': 0, 'gyro_inf': 0, 'accel_constant': False, 'gyro_constant': False, 'finite_fraction_required': 1.0}",>=99% finite required IMU samples,Finite-sample check.,none
+V2_02_medium,MONOTONIC_TS,timestamps,INFO,PASS,backward=0 dup=0,strictly increasing timestamps preferred,Native IMU timestamps.,none
+V2_02_medium,CONSTANT_CHANNELS,imu,INFO,PASS,accel_constant=False gyro_constant=False,non-constant IMU channels,Degenerate stream check.,none
+V2_02_medium,GT_READABLE,ground_truth,CRITICAL,PASS,n=23091 file=data.csv,GT CSV readable,GT table parsed.,none
+V2_02_medium,GT_OVERLAP,ground_truth,INFO,PASS,115.449999872,>=20 s IMU-GT overlap,Temporal overlap on native timestamps (no interpolation).,none
+V2_03_difficult,ZIP_VALID,archive,INFO,PASS,testzip_ok,zipfile.testzip is None,Official inner zip readable.,none
+V2_03_difficult,CSV_READABLE,imu,CRITICAL,PASS,"n=23370 header=#timestamp [ns],w_RS_S_x [rad s^-1],w_RS_S_y [rad s^-1],w_RS_S_z [rad s^-1],a_RS_S_x [m s^-2],a_RS_S_y [m s^-2],a_RS_S_z",readable CSV with header,IMU table parsed.,none
+V2_03_difficult,YAML_READABLE,calibration,INFO,PASS,data\cache\euroc\V2_03_difficult\mav0\imu0\sensor.yaml,imu0/sensor.yaml,Calibration YAML present.,none
+V2_03_difficult,REQUIRED_COLUMNS,imu,CRITICAL,PASS,HEADER_MAPPED,timestamp + 3 gyro + 3 accel,Header mapping.,none
+V2_03_difficult,NAN_INF,imu,INFO,PASS,"{'accel_nan': 0, 'accel_inf': 0, 'gyro_nan': 0, 'gyro_inf': 0, 'accel_constant': False, 'gyro_constant': False, 'finite_fraction_required': 1.0}",>=99% finite required IMU samples,Finite-sample check.,none
+V2_03_difficult,MONOTONIC_TS,timestamps,INFO,PASS,backward=0 dup=0,strictly increasing timestamps preferred,Native IMU timestamps.,none
+V2_03_difficult,CONSTANT_CHANNELS,imu,INFO,PASS,accel_constant=False gyro_constant=False,non-constant IMU channels,Degenerate stream check.,none
+V2_03_difficult,GT_READABLE,ground_truth,CRITICAL,PASS,n=22970 file=data.csv,GT CSV readable,GT table parsed.,none
+V2_03_difficult,GT_OVERLAP,ground_truth,INFO,PASS,114.845000192,>=20 s IMU-GT overlap,Temporal overlap on native timestamps (no interpolation).,none

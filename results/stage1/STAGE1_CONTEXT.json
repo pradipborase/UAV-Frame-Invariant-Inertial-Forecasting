@@ -1,0 +1,167 @@
+{
+  "decision": "PASS",
+  "utc": "2026-09-12T17:35:07Z",
+  "n_euroc": 6,
+  "n_uzh": 8,
+  "major_compat_n": 4,
+  "filters_ok": true,
+  "near_qf": [],
+  "degeneracy": false,
+  "qf_range": [
+    0.16915925765958595,
+    166.60939611507894
+  ],
+  "qw_range": [
+    0.0,
+    20.209175101512983
+  ],
+  "protocol_sha256": "b90e67caf7e44264ce02a3a2b6a9b9cd1925719b5201d0e77f1aafd4501defed",
+  "protocol_yaml_sha256": "8fd75b59e35aac291f597fb856ff1debfc9609cf7a52adf6fc0e3502bf3c0d7d",
+  "findings": [],
+  "spec_200": {
+    "fs_hz": 200.0,
+    "n_sections": 3,
+    "order": 6,
+    "max_pole_radius": 0.943485417547315,
+    "stable": true,
+    "passband_max_db": -1.9286549331065743e-15,
+    "passband_min_db": -0.999999780774804,
+    "max_passband_loss_db": 0.999999780774804,
+    "min_stopband_atten_db": 60.00000004067061,
+    "meets_passband": true,
+    "meets_stopband": true,
+    "group_delay_passband_median_samples": 4.131066510122675,
+    "group_delay_passband_max_samples": 19.435221626387555,
+    "impulse_tail_rel_1s": 4.007427714180584e-06
+  },
+  "spec_500": {
+    "fs_hz": 500.0,
+    "n_sections": 3,
+    "order": 6,
+    "max_pole_radius": 0.9850144502255489,
+    "stable": true,
+    "passband_max_db": -7.384749232581859e-07,
+    "passband_min_db": -0.9999999999999813,
+    "max_passband_loss_db": 0.9999999999999813,
+    "min_stopband_atten_db": 60.00000025733807,
+    "meets_passband": true,
+    "meets_stopband": true,
+    "group_delay_passband_median_samples": 12.998985106026694,
+    "group_delay_passband_max_samples": 74.35790218237338,
+    "impulse_tail_rel_1s": 0.00015430970570747977
+  },
+  "hash_rows": [
+    {
+      "dataset": "EUROC",
+      "sequence_id": "V1_01_easy",
+      "path": "data\\raw\\euroc\\extracted\\V1_01_easy.zip",
+      "sha256": "a920fe5b5e69a6ad19b32f1cfaf90ac2f59d45dfd1ca18cc9722e07684ba45fa",
+      "expected_sha256": "a920fe5b5e69a6ad19b32f1cfaf90ac2f59d45dfd1ca18cc9722e07684ba45fa",
+      "status": "PASS"
+    },
+    {
+      "dataset": "EUROC",
+      "sequence_id": "V1_02_medium",
+      "path": "data\\raw\\euroc\\extracted\\V1_02_medium.zip",
+      "sha256": "0cf5d44baf7aac5d6d705dfb6c5abdd097139bc95aa252dc0c00c66d479ebfc2",
+      "expected_sha256": "0cf5d44baf7aac5d6d705dfb6c5abdd097139bc95aa252dc0c00c66d479ebfc2",
+      "status": "PASS"
+    },
+    {
+      "dataset": "EUROC",
+      "sequence_id": "V1_03_difficult",
+      "path": "data\\raw\\euroc\\extracted\\V1_03_difficult.zip",
+      "sha256": "3a29beda3c9467dcab08bfa181ed924c3397c2bdb3a780baaef6eb12955d82a4",
+      "expected_sha256": "3a29beda3c9467dcab08bfa181ed924c3397c2bdb3a780baaef6eb12955d82a4",
+      "status": "PASS"
+    },
+    {
+      "dataset": "EUROC",
+      "sequence_id": "V2_01_easy",
+      "path": "data\\raw\\euroc\\extracted\\V2_01_easy.zip",
+      "sha256": "06875e7591a883c7bfadc4604c41dce4837a475fe272e0337650141bc9530262",
+      "expected_sha256": "06875e7591a883c7bfadc4604c41dce4837a475fe272e0337650141bc9530262",
+      "status": "PASS"
+    },
+    {
+      "dataset": "EUROC",
+      "sequence_id": "V2_02_medium",
+      "path": "data\\raw\\euroc\\extracted\\V2_02_medium.zip",
+      "sha256": "6bbaae64fa28d888533f8659284d5a7b4cd0278ec8f5d2548a919e296518edd2",
+      "expected_sha256": "6bbaae64fa28d888533f8659284d5a7b4cd0278ec8f5d2548a919e296518edd2",
+      "status": "PASS"
+    },
+    {
+      "dataset": "EUROC",
+      "sequence_id": "V2_03_difficult",
+      "path": "data\\raw\\euroc\\extracted\\V2_03_difficult.zip",
+      "sha256": "98f78ae99e35a93af3f641c62d29d8826a63d013ffa89263a363ab03aab4ad7e",
+      "expected_sha256": "98f78ae99e35a93af3f641c62d29d8826a63d013ffa89263a363ab03aab4ad7e",
+      "status": "PASS"
+    },
+    {
+      "dataset": "UZH_FPV",
+      "sequence_id": "indoor_forward_6_snapdragon",
+      "path": "data\\raw\\uzh_fpv\\sequences\\indoor_forward_6_snapdragon_with_gt.zip",
+      "sha256": "5da4d454c35b9b20d3566460d6f25f93b446d316eec05c828c861bf901c4f538",
+      "expected_sha256": "5da4d454c35b9b20d3566460d6f25f93b446d316eec05c828c861bf901c4f538",
+      "status": "PASS"
+    },
+    {
+      "dataset": "UZH_FPV",
+      "sequence_id": "indoor_forward_9_snapdragon",
+      "path": "data\\raw\\uzh_fpv\\sequences\\indoor_forward_9_snapdragon_with_gt.zip",
+      "sha256": "42a75e19dbb0db485def9b93d9843caa9e7a999ded8ac7ecfd240cef68ecacda",
+      "expected_sha256": "42a75e19dbb0db485def9b93d9843caa9e7a999ded8ac7ecfd240cef68ecacda",
+      "status": "PASS"
+    },
+    {
+      "dataset": "UZH_FPV",
+      "sequence_id": "indoor_forward_10_snapdragon",
+      "path": "data\\raw\\uzh_fpv\\sequences\\indoor_forward_10_snapdragon_with_gt.zip",
+      "sha256": "7273464b8f4e4ca9e449ea9177b31d50f24d2e527ee23b87dca00c37bb844d0e",
+      "expected_sha256": "7273464b8f4e4ca9e449ea9177b31d50f24d2e527ee23b87dca00c37bb844d0e",
+      "status": "PASS"
+    },
+    {
+      "dataset": "UZH_FPV",
+      "sequence_id": "indoor_45_2_snapdragon",
+      "path": "data\\raw\\uzh_fpv\\sequences\\indoor_45_2_snapdragon_with_gt.zip",
+      "sha256": "894ec4687d9e6a1b27ed8c90ecc310595acca1b86ae418685842307caa1dbf24",
+      "expected_sha256": "894ec4687d9e6a1b27ed8c90ecc310595acca1b86ae418685842307caa1dbf24",
+      "status": "PASS"
+    },
+    {
+      "dataset": "UZH_FPV",
+      "sequence_id": "indoor_45_4_snapdragon",
+      "path": "data\\raw\\uzh_fpv\\sequences\\indoor_45_4_snapdragon_with_gt.zip",
+      "sha256": "13e681da667816808192852620d189fec9101535bc6a4426f9df8cfe6bfd35f6",
+      "expected_sha256": "13e681da667816808192852620d189fec9101535bc6a4426f9df8cfe6bfd35f6",
+      "status": "PASS"
+    },
+    {
+      "dataset": "UZH_FPV",
+      "sequence_id": "indoor_45_13_snapdragon",
+      "path": "data\\raw\\uzh_fpv\\sequences\\indoor_45_13_snapdragon_with_gt.zip",
+      "sha256": "795a9cea2081812b2854c583ef51ab6c11c18c536f48b9c19cc423c58ec9c77b",
+      "expected_sha256": "795a9cea2081812b2854c583ef51ab6c11c18c536f48b9c19cc423c58ec9c77b",
+      "status": "PASS"
+    },
+    {
+      "dataset": "UZH_FPV",
+      "sequence_id": "indoor_45_14_snapdragon",
+      "path": "data\\raw\\uzh_fpv\\sequences\\indoor_45_14_snapdragon_with_gt.zip",
+      "sha256": "6fbfd7ec1111b9eb1963bac87eab8846d5af27912b5ace578fe4b242b641be3a",
+      "expected_sha256": "6fbfd7ec1111b9eb1963bac87eab8846d5af27912b5ace578fe4b242b641be3a",
+      "status": "PASS"
+    },
+    {
+      "dataset": "UZH_FPV",
+      "sequence_id": "outdoor_forward_1_snapdragon",
+      "path": "data\\raw\\uzh_fpv\\sequences\\outdoor_forward_1_snapdragon_with_gt.zip",
+      "sha256": "6f1ef782f301d8df56996add227dfed10c17dfdbc200024164d59a1fad9f7835",
+      "expected_sha256": "6f1ef782f301d8df56996add227dfed10c17dfdbc200024164d59a1fad9f7835",
+      "status": "PASS"
+    }
+  ]
+}

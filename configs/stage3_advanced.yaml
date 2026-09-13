@@ -1,0 +1,104 @@
+# Stage 3 compact advanced sequence models.
+# PRE-SPECIFIED before target transfer. Do not retune after seeing transfer RMSE.
+# This file and results/stage3/HYPERPARAMETER_GRID.csv are hashed before evaluation.
+
+stage: 3
+project_name: UAV_MEASUREMENT_FRESH
+terminology: PRE_SPECIFIED_LOCKED_PROTOCOL
+
+lookback_samples: 100
+horizon_samples: 20
+stride_samples: 5
+dt_s: 0.01
+batch_size: 64
+max_epochs: 100
+early_stopping_patience: 10
+min_delta_norm_loss: 1.0e-5
+windows_per_sequence_per_epoch: 32
+
+optimizer: AdamW
+learning_rates: [1.0e-3, 3.0e-4]
+weight_decays: [0.0, 1.0e-4]
+
+seeds: [20260912, 20260913, 20260914]
+bootstrap_reps: 10000
+bootstrap_seed: 20260912
+high_qf_percentile: 95.0
+report_horizon_samples: [5, 10, 20]
+
+primary_input: [q_f, q_w]
+ablation_input: [q_f]
+direct_multihorizon: true
+recursive_rollout: false
+batch_norm: forbidden
+dropout_at_eval: off
+mc_dropout: forbidden_for_primary
+
+loss: mse_equal_horizon_weight_normalized_target
+metrics_unit: m/s^2
+selection_objective: mean_over_seeds_of_equal_validation_sequence_mean_multihorizon_RMSE
+tie_break: fewer_parameters_then_config_id
+
+param_budget:
+  TCN: 100000
+  GRU: 100000
+  TRANSFORMER: 150000
+
+final_fit_rule: >
+  Hyperparameter search uses leave-group-out source validation with early
+  stopping. The selected epoch is the median best source-validation epoch
+  across LGO folds and seeds. Final source models train on all permitted
+  source sequences for that epoch count (Ridge analogue: fit on all remaining
+  source recordings after source-only selection). Target data never enter
+  training, stopping, scaling, or architecture choice.
+
+device: cpu
+torch_num_threads_per_worker: 1
+n_workers: 6
+
+architectures:
+  TCN:
+    max_configs: 12
+    configs:
+      - {config_id: TCN01, channels: [16, 16], kernel_size: 3, dilations: [1, 2, 4, 8, 16], dropout: 0.0, lr: 1.0e-3, weight_decay: 0.0, activation: relu}
+      - {config_id: TCN02, channels: [16, 16], kernel_size: 3, dilations: [1, 2, 4, 8, 16], dropout: 0.1, lr: 1.0e-3, weight_decay: 1.0e-4, activation: relu}
+      - {config_id: TCN03, channels: [16, 16], kernel_size: 5, dilations: [1, 2, 4, 8, 16], dropout: 0.0, lr: 3.0e-4, weight_decay: 0.0, activation: relu}
+      - {config_id: TCN04, channels: [16, 16], kernel_size: 5, dilations: [1, 2, 4, 8, 16], dropout: 0.1, lr: 3.0e-4, weight_decay: 1.0e-4, activation: gelu}
+      - {config_id: TCN05, channels: [32, 32], kernel_size: 3, dilations: [1, 2, 4, 8, 16], dropout: 0.0, lr: 1.0e-3, weight_decay: 1.0e-4, activation: relu}
+      - {config_id: TCN06, channels: [32, 32], kernel_size: 3, dilations: [1, 2, 4, 8, 16], dropout: 0.1, lr: 3.0e-4, weight_decay: 0.0, activation: relu}
+      - {config_id: TCN07, channels: [32, 32], kernel_size: 5, dilations: [1, 2, 4, 8, 16], dropout: 0.0, lr: 1.0e-3, weight_decay: 0.0, activation: relu}
+      - {config_id: TCN08, channels: [32, 32], kernel_size: 5, dilations: [1, 2, 4, 8, 16], dropout: 0.1, lr: 3.0e-4, weight_decay: 1.0e-4, activation: gelu}
+      - {config_id: TCN09, channels: [16, 16], kernel_size: 3, dilations: [1, 2, 4, 8], dropout: 0.0, lr: 1.0e-3, weight_decay: 1.0e-4, activation: relu}
+      - {config_id: TCN10, channels: [32, 32], kernel_size: 3, dilations: [1, 2, 4, 8], dropout: 0.1, lr: 1.0e-3, weight_decay: 0.0, activation: relu}
+      - {config_id: TCN11, channels: [16, 16], kernel_size: 5, dilations: [1, 2, 4, 8], dropout: 0.0, lr: 3.0e-4, weight_decay: 1.0e-4, activation: relu}
+      - {config_id: TCN12, channels: [32, 32], kernel_size: 5, dilations: [1, 2, 4], dropout: 0.0, lr: 1.0e-3, weight_decay: 1.0e-4, activation: gelu}
+  GRU:
+    max_configs: 12
+    configs:
+      - {config_id: GRU01, hidden_size: 16, n_layers: 1, dropout: 0.0, lr: 1.0e-3, weight_decay: 0.0}
+      - {config_id: GRU02, hidden_size: 16, n_layers: 1, dropout: 0.1, lr: 1.0e-3, weight_decay: 1.0e-4}
+      - {config_id: GRU03, hidden_size: 16, n_layers: 2, dropout: 0.1, lr: 3.0e-4, weight_decay: 1.0e-4}
+      - {config_id: GRU04, hidden_size: 32, n_layers: 1, dropout: 0.0, lr: 1.0e-3, weight_decay: 0.0}
+      - {config_id: GRU05, hidden_size: 32, n_layers: 1, dropout: 0.1, lr: 1.0e-3, weight_decay: 1.0e-4}
+      - {config_id: GRU06, hidden_size: 32, n_layers: 2, dropout: 0.1, lr: 3.0e-4, weight_decay: 0.0}
+      - {config_id: GRU07, hidden_size: 64, n_layers: 1, dropout: 0.0, lr: 1.0e-3, weight_decay: 1.0e-4}
+      - {config_id: GRU08, hidden_size: 64, n_layers: 1, dropout: 0.1, lr: 3.0e-4, weight_decay: 0.0}
+      - {config_id: GRU09, hidden_size: 64, n_layers: 2, dropout: 0.1, lr: 3.0e-4, weight_decay: 1.0e-4}
+      - {config_id: GRU10, hidden_size: 32, n_layers: 1, dropout: 0.0, lr: 3.0e-4, weight_decay: 1.0e-4}
+      - {config_id: GRU11, hidden_size: 16, n_layers: 2, dropout: 0.0, lr: 1.0e-3, weight_decay: 0.0}
+      - {config_id: GRU12, hidden_size: 32, n_layers: 2, dropout: 0.0, lr: 1.0e-3, weight_decay: 1.0e-4}
+  TRANSFORMER:
+    max_configs: 12
+    configs:
+      - {config_id: TR01, d_model: 16, n_heads: 2, n_layers: 1, ff_multiplier: 2, dropout: 0.0, pooling: last, lr: 1.0e-3, weight_decay: 0.0}
+      - {config_id: TR02, d_model: 16, n_heads: 2, n_layers: 1, ff_multiplier: 4, dropout: 0.1, pooling: last, lr: 1.0e-3, weight_decay: 1.0e-4}
+      - {config_id: TR03, d_model: 16, n_heads: 2, n_layers: 2, ff_multiplier: 2, dropout: 0.1, pooling: last, lr: 3.0e-4, weight_decay: 1.0e-4}
+      - {config_id: TR04, d_model: 32, n_heads: 4, n_layers: 1, ff_multiplier: 2, dropout: 0.0, pooling: last, lr: 1.0e-3, weight_decay: 0.0}
+      - {config_id: TR05, d_model: 32, n_heads: 4, n_layers: 1, ff_multiplier: 4, dropout: 0.1, pooling: last, lr: 1.0e-3, weight_decay: 1.0e-4}
+      - {config_id: TR06, d_model: 32, n_heads: 2, n_layers: 2, ff_multiplier: 2, dropout: 0.1, pooling: mean, lr: 3.0e-4, weight_decay: 0.0}
+      - {config_id: TR07, d_model: 16, n_heads: 4, n_layers: 1, ff_multiplier: 4, dropout: 0.0, pooling: last, lr: 3.0e-4, weight_decay: 1.0e-4}
+      - {config_id: TR08, d_model: 32, n_heads: 4, n_layers: 2, ff_multiplier: 2, dropout: 0.1, pooling: last, lr: 3.0e-4, weight_decay: 1.0e-4}
+      - {config_id: TR09, d_model: 16, n_heads: 2, n_layers: 1, ff_multiplier: 2, dropout: 0.1, pooling: mean, lr: 1.0e-3, weight_decay: 0.0}
+      - {config_id: TR10, d_model: 32, n_heads: 4, n_layers: 1, ff_multiplier: 2, dropout: 0.1, pooling: last, lr: 3.0e-4, weight_decay: 1.0e-4}
+      - {config_id: TR11, d_model: 16, n_heads: 2, n_layers: 2, ff_multiplier: 4, dropout: 0.0, pooling: last, lr: 1.0e-3, weight_decay: 1.0e-4}
+      - {config_id: TR12, d_model: 32, n_heads: 2, n_layers: 1, ff_multiplier: 4, dropout: 0.0, pooling: mean, lr: 1.0e-3, weight_decay: 0.0}

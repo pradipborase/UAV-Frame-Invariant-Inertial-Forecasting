@@ -1,0 +1,13 @@
+item,setting
+representation,q_f = ||f||_2 (specific-force magnitude); q_w = ||omega||_2
+primary_target,future q_f (m/s^2)
+primary_inputs,history of q_f and q_w
+sample_rate,100 Hz after causal elliptic anti-alias (30/45 Hz) and integer decimation
+lookback,1.0 s (100 samples)
+horizon,"0.20 s (20 samples), direct multi-output"
+stride,0.05 s (5 samples)
+inferential_unit,flight recording / sequence
+dataset_estimand,equal-sequence mean multi-horizon RMSE
+transfer_rule,"freeze source objects; no target-fitted scaler, alignment, or selection"
+normalization_rule,"equal-recording-weighted standard scaler, source-train recordings only"
+ridge_comparator,WITHIN_EUROC: B3_RIDGE_QF_QW lag=25 alpha=0.0001; WITHIN_UZH: B3_RIDGE_QF_QW lag=10 alpha=0.01; EUROC_TO_UZH: B3_RIDGE_QF_QW lag=25 alpha=0.0001; UZH_TO_EUROC: B2_RIDGE_QF lag=25 alpha=1.0

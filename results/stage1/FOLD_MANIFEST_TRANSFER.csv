@@ -1,0 +1,29 @@
+fold_id,evaluation_class,source_or_domain,split_role,dataset,sequence_id,dependency_group,notes
+TRANSFER_EUROC_TO_UZH,ZERO_SHOT_TRANSFER,EUROC,source_train,EUROC,V1_01_easy,EUROC_FIREFLY_VICON_ROOM1,source-only fitting; no UZH parameters
+TRANSFER_EUROC_TO_UZH,ZERO_SHOT_TRANSFER,EUROC,source_train,EUROC,V1_02_medium,EUROC_FIREFLY_VICON_ROOM1,source-only fitting; no UZH parameters
+TRANSFER_EUROC_TO_UZH,ZERO_SHOT_TRANSFER,EUROC,source_train,EUROC,V1_03_difficult,EUROC_FIREFLY_VICON_ROOM1,source-only fitting; no UZH parameters
+TRANSFER_EUROC_TO_UZH,ZERO_SHOT_TRANSFER,EUROC,source_train,EUROC,V2_01_easy,EUROC_FIREFLY_VICON_ROOM2,source-only fitting; no UZH parameters
+TRANSFER_EUROC_TO_UZH,ZERO_SHOT_TRANSFER,EUROC,source_train,EUROC,V2_02_medium,EUROC_FIREFLY_VICON_ROOM2,source-only fitting; no UZH parameters
+TRANSFER_EUROC_TO_UZH,ZERO_SHOT_TRANSFER,EUROC,source_train,EUROC,V2_03_difficult,EUROC_FIREFLY_VICON_ROOM2,source-only fitting; no UZH parameters
+TRANSFER_EUROC_TO_UZH,ZERO_SHOT_TRANSFER,EUROC,target_eval,UZH_FPV,indoor_forward_6_snapdragon,indoor_forward,frozen source system; no target-domain fitting
+TRANSFER_EUROC_TO_UZH,ZERO_SHOT_TRANSFER,EUROC,target_eval,UZH_FPV,indoor_forward_9_snapdragon,indoor_forward,frozen source system; no target-domain fitting
+TRANSFER_EUROC_TO_UZH,ZERO_SHOT_TRANSFER,EUROC,target_eval,UZH_FPV,indoor_forward_10_snapdragon,indoor_forward,frozen source system; no target-domain fitting
+TRANSFER_EUROC_TO_UZH,ZERO_SHOT_TRANSFER,EUROC,target_eval,UZH_FPV,indoor_45_2_snapdragon,indoor_45,frozen source system; no target-domain fitting
+TRANSFER_EUROC_TO_UZH,ZERO_SHOT_TRANSFER,EUROC,target_eval,UZH_FPV,indoor_45_4_snapdragon,indoor_45,frozen source system; no target-domain fitting
+TRANSFER_EUROC_TO_UZH,ZERO_SHOT_TRANSFER,EUROC,target_eval,UZH_FPV,indoor_45_13_snapdragon,indoor_45,frozen source system; no target-domain fitting
+TRANSFER_EUROC_TO_UZH,ZERO_SHOT_TRANSFER,EUROC,target_eval,UZH_FPV,indoor_45_14_snapdragon,indoor_45,frozen source system; no target-domain fitting
+TRANSFER_EUROC_TO_UZH,ZERO_SHOT_TRANSFER,EUROC,target_eval,UZH_FPV,outdoor_forward_1_snapdragon,outdoor_forward,frozen source system; no target-domain fitting
+TRANSFER_UZH_TO_EUROC,ZERO_SHOT_TRANSFER,UZH_FPV,source_train,UZH_FPV,indoor_forward_6_snapdragon,indoor_forward,source-only fitting; no EuRoC parameters
+TRANSFER_UZH_TO_EUROC,ZERO_SHOT_TRANSFER,UZH_FPV,source_train,UZH_FPV,indoor_forward_9_snapdragon,indoor_forward,source-only fitting; no EuRoC parameters
+TRANSFER_UZH_TO_EUROC,ZERO_SHOT_TRANSFER,UZH_FPV,source_train,UZH_FPV,indoor_forward_10_snapdragon,indoor_forward,source-only fitting; no EuRoC parameters
+TRANSFER_UZH_TO_EUROC,ZERO_SHOT_TRANSFER,UZH_FPV,source_train,UZH_FPV,indoor_45_2_snapdragon,indoor_45,source-only fitting; no EuRoC parameters
+TRANSFER_UZH_TO_EUROC,ZERO_SHOT_TRANSFER,UZH_FPV,source_train,UZH_FPV,indoor_45_4_snapdragon,indoor_45,source-only fitting; no EuRoC parameters
+TRANSFER_UZH_TO_EUROC,ZERO_SHOT_TRANSFER,UZH_FPV,source_train,UZH_FPV,indoor_45_13_snapdragon,indoor_45,source-only fitting; no EuRoC parameters
+TRANSFER_UZH_TO_EUROC,ZERO_SHOT_TRANSFER,UZH_FPV,source_train,UZH_FPV,indoor_45_14_snapdragon,indoor_45,source-only fitting; no EuRoC parameters
+TRANSFER_UZH_TO_EUROC,ZERO_SHOT_TRANSFER,UZH_FPV,source_train,UZH_FPV,outdoor_forward_1_snapdragon,outdoor_forward,source-only fitting; no EuRoC parameters
+TRANSFER_UZH_TO_EUROC,ZERO_SHOT_TRANSFER,UZH_FPV,target_eval,EUROC,V1_01_easy,EUROC_FIREFLY_VICON_ROOM1,frozen source system; no target-domain fitting
+TRANSFER_UZH_TO_EUROC,ZERO_SHOT_TRANSFER,UZH_FPV,target_eval,EUROC,V1_02_medium,EUROC_FIREFLY_VICON_ROOM1,frozen source system; no target-domain fitting
+TRANSFER_UZH_TO_EUROC,ZERO_SHOT_TRANSFER,UZH_FPV,target_eval,EUROC,V1_03_difficult,EUROC_FIREFLY_VICON_ROOM1,frozen source system; no target-domain fitting
+TRANSFER_UZH_TO_EUROC,ZERO_SHOT_TRANSFER,UZH_FPV,target_eval,EUROC,V2_01_easy,EUROC_FIREFLY_VICON_ROOM2,frozen source system; no target-domain fitting
+TRANSFER_UZH_TO_EUROC,ZERO_SHOT_TRANSFER,UZH_FPV,target_eval,EUROC,V2_02_medium,EUROC_FIREFLY_VICON_ROOM2,frozen source system; no target-domain fitting
+TRANSFER_UZH_TO_EUROC,ZERO_SHOT_TRANSFER,UZH_FPV,target_eval,EUROC,V2_03_difficult,EUROC_FIREFLY_VICON_ROOM2,frozen source system; no target-domain fitting

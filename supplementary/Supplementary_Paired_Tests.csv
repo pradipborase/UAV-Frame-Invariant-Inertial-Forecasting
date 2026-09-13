@@ -1,0 +1,13 @@
+context,model,ridge_id,n_sequences,mean_paired_delta,median_paired_delta,ci_low,ci_high,wins,losses,ties,sign_flip_p_exploratory,delta_definition
+WITHIN_EUROC,TCN,B3_RIDGE_QF_QW,6,0.006857312867,0.0090796633,-0.005129755767,0.01567319182,1,5,0,0.28125,Delta = RMSE_advanced - RMSE_Ridge; Ridge = source-selected B3; sign-flip p is exploratory
+WITHIN_EUROC,GRU,B3_RIDGE_QF_QW,6,0.00332696965,0.00957012765,-0.009797523333,0.01376885875,2,4,0,0.65625,Delta = RMSE_advanced - RMSE_Ridge; Ridge = source-selected B3; sign-flip p is exploratory
+WITHIN_EUROC,Transformer,B3_RIDGE_QF_QW,6,0.0156903739,0.02372919715,-0.0052986296,0.03205811462,1,5,0,0.1875,Delta = RMSE_advanced - RMSE_Ridge; Ridge = source-selected B3; sign-flip p is exploratory
+WITHIN_UZH,TCN,B3_RIDGE_QF_QW,8,-0.02301985438,-0.01976575925,-0.0468787363,0.002736867219,6,2,0,0.171875,Delta = RMSE_advanced - RMSE_Ridge; Ridge = source-selected B3; sign-flip p is exploratory
+WITHIN_UZH,GRU,B3_RIDGE_QF_QW,8,0.0026760525,-0.011837991,-0.03859730201,0.04935560038,5,3,0,0.921875,Delta = RMSE_advanced - RMSE_Ridge; Ridge = source-selected B3; sign-flip p is exploratory
+WITHIN_UZH,Transformer,B3_RIDGE_QF_QW,8,-0.04791510572,-0.0397562917,-0.07264050955,-0.0223155033,7,1,0,0.015625,Delta = RMSE_advanced - RMSE_Ridge; Ridge = source-selected B3; sign-flip p is exploratory
+EUROC_TO_UZH,TCN,B3_RIDGE_QF_QW,8,-0.01524081231,-0.00663239625,-0.04400357925,0.01096331881,6,2,0,0.359375,Delta = RMSE_advanced - RMSE_Ridge; Ridge = source-selected B3; sign-flip p is exploratory
+EUROC_TO_UZH,GRU,B3_RIDGE_QF_QW,8,0.0148885712,-0.0105822832,-0.0450543073,0.08177639397,4,4,0,0.7109375,Delta = RMSE_advanced - RMSE_Ridge; Ridge = source-selected B3; sign-flip p is exploratory
+EUROC_TO_UZH,Transformer,B3_RIDGE_QF_QW,8,0.1324351951,0.09632851225,0.02321011608,0.2539979616,1,7,0,0.0703125,Delta = RMSE_advanced - RMSE_Ridge; Ridge = source-selected B3; sign-flip p is exploratory
+UZH_TO_EUROC,TCN,B3_RIDGE_QF_QW,6,-0.00542154725,0.00019649415,-0.01838145335,0.003739028817,3,3,0,0.6875,Delta = RMSE_advanced - RMSE_Ridge; Ridge = source-selected B3; sign-flip p is exploratory
+UZH_TO_EUROC,GRU,B3_RIDGE_QF_QW,6,-0.02609631442,-0.0295998945,-0.03819996568,-0.01341806948,5,1,0,0.0625,Delta = RMSE_advanced - RMSE_Ridge; Ridge = source-selected B3; sign-flip p is exploratory
+UZH_TO_EUROC,Transformer,B3_RIDGE_QF_QW,6,-0.0139250995,-0.0171482556,-0.02612179287,-0.0001080297167,5,1,0,0.15625,Delta = RMSE_advanced - RMSE_Ridge; Ridge = source-selected B3; sign-flip p is exploratory

@@ -1,0 +1,65 @@
+# Stage 1 processing configuration. Not a fitted model.
+# Physical filter edges are locked here and must not be tuned on prediction error.
+
+stage: 1
+project_name: UAV_MEASUREMENT_FRESH
+common_rate_hz: 100
+lookback_s: 1.0
+horizon_s: 0.20
+stride_s: 0.05
+warmup_s: 1.0
+report_horizons_ms: [50, 100, 200]
+bootstrap_reps: 10000
+bootstrap_seed: 20260912
+
+filter:
+  type: elliptic_iir_sos
+  ftype: ellip
+  passband_hz: 30.0
+  stopband_hz: 45.0
+  gpass_db: 1.0
+  gstop_db: 60.0
+  causal: true
+  fit_scope: NONE_DETERMINISTIC_PHYSICAL
+
+nominal_native_rate_hz:
+  EUROC: 200
+  UZH_FPV: 500
+
+decimation_factor:
+  EUROC: 2
+  UZH_FPV: 5
+
+euroc_primary:
+  - V1_01_easy
+  - V1_02_medium
+  - V1_03_difficult
+  - V2_01_easy
+  - V2_02_medium
+  - V2_03_difficult
+
+uzh_primary:
+  - indoor_forward_6_snapdragon
+  - indoor_forward_9_snapdragon
+  - indoor_forward_10_snapdragon
+  - indoor_45_2_snapdragon
+  - indoor_45_4_snapdragon
+  - indoor_45_13_snapdragon
+  - indoor_45_14_snapdragon
+  - outdoor_forward_1_snapdragon
+
+dependency_groups:
+  V1_01_easy: EUROC_FIREFLY_VICON_ROOM1
+  V1_02_medium: EUROC_FIREFLY_VICON_ROOM1
+  V1_03_difficult: EUROC_FIREFLY_VICON_ROOM1
+  V2_01_easy: EUROC_FIREFLY_VICON_ROOM2
+  V2_02_medium: EUROC_FIREFLY_VICON_ROOM2
+  V2_03_difficult: EUROC_FIREFLY_VICON_ROOM2
+  indoor_forward_6_snapdragon: indoor_forward
+  indoor_forward_9_snapdragon: indoor_forward
+  indoor_forward_10_snapdragon: indoor_forward
+  indoor_45_2_snapdragon: indoor_45
+  indoor_45_4_snapdragon: indoor_45
+  indoor_45_13_snapdragon: indoor_45
+  indoor_45_14_snapdragon: indoor_45
+  outdoor_forward_1_snapdragon: outdoor_forward

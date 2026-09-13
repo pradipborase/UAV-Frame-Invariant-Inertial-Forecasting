@@ -1,0 +1,9 @@
+direction,model,zero_shot_rmse,within_target_rmse,transfer_gap,relative_transfer_gap_pct,notes
+EUROC_TO_UZH,Best frozen Ridge,2.065149757,1.943140653,0.1220091041,6.278964105,descriptive; Persistence omitted because it has no trained source model
+UZH_TO_EUROC,Best frozen Ridge,0.8153206077,0.7282562381,0.08706436965,11.95518351,descriptive; Persistence omitted because it has no trained source model
+EUROC_TO_UZH,TCN,2.049908945,1.920120799,0.1297881462,6.759374007,descriptive; Persistence omitted because it has no trained source model
+UZH_TO_EUROC,TCN,0.8253822249,0.7351135509,0.09026867395,12.27955516,descriptive; Persistence omitted because it has no trained source model
+EUROC_TO_UZH,GRU,2.080038328,1.945816705,0.1342216228,6.89795819,descriptive; Persistence omitted because it has no trained source model
+UZH_TO_EUROC,GRU,0.8047074577,0.7315832077,0.07312425,9.995342871,descriptive; Persistence omitted because it has no trained source model
+EUROC_TO_UZH,Transformer,2.197584952,1.895225547,0.3023594049,15.95374257,descriptive; Persistence omitted because it has no trained source model
+UZH_TO_EUROC,Transformer,0.8168786727,0.743946612,0.07293206067,9.803399799,descriptive; Persistence omitted because it has no trained source model

@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+message: "If you use this reproducibility package, please cite the following work."
+title: "A Frame-Invariant Evaluation Protocol for Cross-Platform Short-Horizon UAV Inertial Forecasting"
+authors:
+  - family-names: Borase
+    given-names: Pradip Diwan
+  - family-names: Agarwal
+    given-names: Vijyant
+type: software
+license: MIT
+version: "1.0.0"
+date-released: "2026-09-13"
+keywords:
+  - UAV
+  - inertial measurement
+  - specific force
+  - zero-shot transfer
+  - time-series forecasting
+preferred-citation:
+  type: article
+  title: "A Frame-Invariant Evaluation Protocol for Cross-Platform Short-Horizon UAV Inertial Forecasting"
+  authors:
+    - family-names: Borase
+      given-names: Pradip Diwan
+    - family-names: Agarwal
+      given-names: Vijyant
+  year: 2026

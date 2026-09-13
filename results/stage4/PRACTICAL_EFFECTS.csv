@@ -1,0 +1,13 @@
+context,model,ridge_rmse,advanced_rmse,absolute_improvement,relative_improvement_pct,notes
+WITHIN_EUROC,TCN,0.7282562381,0.7351135509,-0.006857312867,-0.941607158,positive absolute_improvement means advanced has lower equal-sequence mean RMSE
+WITHIN_EUROC,GRU,0.7282562381,0.7315832077,-0.00332696965,-0.4568405289,positive absolute_improvement means advanced has lower equal-sequence mean RMSE
+WITHIN_EUROC,Transformer,0.7282562381,0.743946612,-0.0156903739,-2.154512805,positive absolute_improvement means advanced has lower equal-sequence mean RMSE
+WITHIN_UZH,TCN,1.943140653,1.920120799,0.02301985438,1.184672573,positive absolute_improvement means advanced has lower equal-sequence mean RMSE
+WITHIN_UZH,GRU,1.943140653,1.945816705,-0.0026760525,-0.1377178999,positive absolute_improvement means advanced has lower equal-sequence mean RMSE
+WITHIN_UZH,Transformer,1.943140653,1.895225547,0.04791510573,2.465858848,positive absolute_improvement means advanced has lower equal-sequence mean RMSE
+EUROC_TO_UZH,TCN,2.065149757,2.049908945,0.01524081231,0.7380003441,positive absolute_improvement means advanced has lower equal-sequence mean RMSE
+EUROC_TO_UZH,GRU,2.065149757,2.080038328,-0.0148885712,-0.7209439,positive absolute_improvement means advanced has lower equal-sequence mean RMSE
+EUROC_TO_UZH,Transformer,2.065149757,2.197584952,-0.1324351951,-6.412861567,positive absolute_improvement means advanced has lower equal-sequence mean RMSE
+UZH_TO_EUROC,TCN,0.8153206077,0.8253822249,-0.01006161717,-1.234068791,positive absolute_improvement means advanced has lower equal-sequence mean RMSE
+UZH_TO_EUROC,GRU,0.8153206077,0.8047074577,0.01061315,1.30171492,positive absolute_improvement means advanced has lower equal-sequence mean RMSE
+UZH_TO_EUROC,Transformer,0.8153206077,0.8168786727,-0.001558064917,-0.1910984344,positive absolute_improvement means advanced has lower equal-sequence mean RMSE

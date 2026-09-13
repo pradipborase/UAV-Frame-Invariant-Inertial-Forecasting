@@ -1,0 +1,141 @@
+evaluation_context,dataset,sequence_id,model,rmse_all,rmse_high_p95_targets,p95_threshold,notes
+WITHIN_EUROC,EUROC,V1_01_easy,TCN,0.4371180845,0.9842353567,10.59911164,sequence-specific p95 of processed q_f; mean over seeds
+WITHIN_EUROC,EUROC,V1_02_medium,TCN,0.6584689819,1.580834217,11.30093467,sequence-specific p95 of processed q_f; mean over seeds
+WITHIN_EUROC,EUROC,V1_03_difficult,TCN,0.6865733646,1.615046019,11.48826622,sequence-specific p95 of processed q_f; mean over seeds
+WITHIN_EUROC,EUROC,V2_01_easy,TCN,0.8806887053,2.718398106,10.98371699,sequence-specific p95 of processed q_f; mean over seeds
+WITHIN_EUROC,EUROC,V2_02_medium,TCN,0.8417649971,1.979182228,11.60218482,sequence-specific p95 of processed q_f; mean over seeds
+WITHIN_EUROC,EUROC,V2_03_difficult,TCN,0.9060671723,2.35158356,11.58910389,sequence-specific p95 of processed q_f; mean over seeds
+WITHIN_EUROC,EUROC,V1_01_easy,GRU,0.4376269389,0.9842585879,10.59911164,sequence-specific p95 of processed q_f; mean over seeds
+WITHIN_EUROC,EUROC,V1_02_medium,GRU,0.657277381,1.588685482,11.30093467,sequence-specific p95 of processed q_f; mean over seeds
+WITHIN_EUROC,EUROC,V1_03_difficult,GRU,0.6823270172,1.584391149,11.48826622,sequence-specific p95 of processed q_f; mean over seeds
+WITHIN_EUROC,EUROC,V2_01_easy,GRU,0.8727905663,2.715703572,10.98371699,sequence-specific p95 of processed q_f; mean over seeds
+WITHIN_EUROC,EUROC,V2_02_medium,GRU,0.8440148577,1.981455114,11.60218482,sequence-specific p95 of processed q_f; mean over seeds
+WITHIN_EUROC,EUROC,V2_03_difficult,GRU,0.8954624853,2.374849517,11.58910389,sequence-specific p95 of processed q_f; mean over seeds
+WITHIN_EUROC,EUROC,V1_01_easy,TRANSFORMER,0.4459415508,0.9783330036,10.59911164,sequence-specific p95 of processed q_f; mean over seeds
+WITHIN_EUROC,EUROC,V1_02_medium,TRANSFORMER,0.6722232372,1.571357369,11.30093467,sequence-specific p95 of processed q_f; mean over seeds
+WITHIN_EUROC,EUROC,V1_03_difficult,TRANSFORMER,0.7023305443,1.618485075,11.48826622,sequence-specific p95 of processed q_f; mean over seeds
+WITHIN_EUROC,EUROC,V2_01_easy,TRANSFORMER,0.8667038865,2.607223174,10.98371699,sequence-specific p95 of processed q_f; mean over seeds
+WITHIN_EUROC,EUROC,V2_02_medium,TRANSFORMER,0.8697776996,2.068429998,11.60218482,sequence-specific p95 of processed q_f; mean over seeds
+WITHIN_EUROC,EUROC,V2_03_difficult,TRANSFORMER,0.9067027535,2.354933934,11.58910389,sequence-specific p95 of processed q_f; mean over seeds
+WITHIN_UZH,UZH_FPV,indoor_forward_6_snapdragon,TCN,3.477165841,13.3033245,17.79954506,sequence-specific p95 of processed q_f; mean over seeds
+WITHIN_UZH,UZH_FPV,indoor_forward_9_snapdragon,TCN,0.7687438455,1.039492147,12.2869086,sequence-specific p95 of processed q_f; mean over seeds
+WITHIN_UZH,UZH_FPV,indoor_forward_10_snapdragon,TCN,0.8579718632,2.026314237,12.44105276,sequence-specific p95 of processed q_f; mean over seeds
+WITHIN_UZH,UZH_FPV,indoor_45_2_snapdragon,TCN,2.03209925,8.12381372,11.07949287,sequence-specific p95 of processed q_f; mean over seeds
+WITHIN_UZH,UZH_FPV,indoor_45_4_snapdragon,TCN,2.431533353,9.79284194,10.68103471,sequence-specific p95 of processed q_f; mean over seeds
+WITHIN_UZH,UZH_FPV,indoor_45_13_snapdragon,TCN,1.856396769,7.17044318,11.13201809,sequence-specific p95 of processed q_f; mean over seeds
+WITHIN_UZH,UZH_FPV,indoor_45_14_snapdragon,TCN,2.351206208,8.462232812,14.56003347,sequence-specific p95 of processed q_f; mean over seeds
+WITHIN_UZH,UZH_FPV,outdoor_forward_1_snapdragon,TCN,1.585849259,5.492241895,11.40654808,sequence-specific p95 of processed q_f; mean over seeds
+WITHIN_UZH,UZH_FPV,indoor_forward_6_snapdragon,GRU,3.610346802,14.36454289,17.79954506,sequence-specific p95 of processed q_f; mean over seeds
+WITHIN_UZH,UZH_FPV,indoor_forward_9_snapdragon,GRU,0.7226274612,1.018991708,12.2869086,sequence-specific p95 of processed q_f; mean over seeds
+WITHIN_UZH,UZH_FPV,indoor_forward_10_snapdragon,GRU,0.8234818205,1.95646437,12.44105276,sequence-specific p95 of processed q_f; mean over seeds
+WITHIN_UZH,UZH_FPV,indoor_45_2_snapdragon,GRU,2.132514874,8.753538977,11.07949287,sequence-specific p95 of processed q_f; mean over seeds
+WITHIN_UZH,UZH_FPV,indoor_45_4_snapdragon,GRU,2.532093661,10.60753885,10.68103471,sequence-specific p95 of processed q_f; mean over seeds
+WITHIN_UZH,UZH_FPV,indoor_45_13_snapdragon,GRU,1.870396014,7.478096074,11.13201809,sequence-specific p95 of processed q_f; mean over seeds
+WITHIN_UZH,UZH_FPV,indoor_45_14_snapdragon,GRU,2.331668469,8.893350055,14.56003347,sequence-specific p95 of processed q_f; mean over seeds
+WITHIN_UZH,UZH_FPV,outdoor_forward_1_snapdragon,GRU,1.543404542,5.666038439,11.40654808,sequence-specific p95 of processed q_f; mean over seeds
+WITHIN_UZH,UZH_FPV,indoor_forward_6_snapdragon,TRANSFORMER,3.444319712,13.61438755,17.79954506,sequence-specific p95 of processed q_f; mean over seeds
+WITHIN_UZH,UZH_FPV,indoor_forward_9_snapdragon,TRANSFORMER,0.7509452736,0.9485532683,12.2869086,sequence-specific p95 of processed q_f; mean over seeds
+WITHIN_UZH,UZH_FPV,indoor_forward_10_snapdragon,TRANSFORMER,0.8534471483,2.003752299,12.44105276,sequence-specific p95 of processed q_f; mean over seeds
+WITHIN_UZH,UZH_FPV,indoor_45_2_snapdragon,TRANSFORMER,2.023112935,8.313118016,11.07949287,sequence-specific p95 of processed q_f; mean over seeds
+WITHIN_UZH,UZH_FPV,indoor_45_4_snapdragon,TRANSFORMER,2.428879008,10.12315997,10.68103471,sequence-specific p95 of processed q_f; mean over seeds
+WITHIN_UZH,UZH_FPV,indoor_45_13_snapdragon,TRANSFORMER,1.831160519,7.290973267,11.13201809,sequence-specific p95 of processed q_f; mean over seeds
+WITHIN_UZH,UZH_FPV,indoor_45_14_snapdragon,TRANSFORMER,2.268844525,8.689000713,14.56003347,sequence-specific p95 of processed q_f; mean over seeds
+WITHIN_UZH,UZH_FPV,outdoor_forward_1_snapdragon,TRANSFORMER,1.561095257,5.440661664,11.40654808,sequence-specific p95 of processed q_f; mean over seeds
+EUROC_TO_UZH,UZH_FPV,indoor_forward_6_snapdragon,TCN,3.834709361,14.71176572,17.79954506,sequence-specific p95 of processed q_f; mean over seeds
+EUROC_TO_UZH,UZH_FPV,indoor_forward_9_snapdragon,TCN,0.89199191,1.803473302,12.2869086,sequence-specific p95 of processed q_f; mean over seeds
+EUROC_TO_UZH,UZH_FPV,indoor_forward_10_snapdragon,TCN,1.040586274,2.967485032,12.44105276,sequence-specific p95 of processed q_f; mean over seeds
+EUROC_TO_UZH,UZH_FPV,indoor_45_2_snapdragon,TCN,2.136540826,8.696577297,11.07949287,sequence-specific p95 of processed q_f; mean over seeds
+EUROC_TO_UZH,UZH_FPV,indoor_45_4_snapdragon,TCN,2.566196574,10.5775573,10.68103471,sequence-specific p95 of processed q_f; mean over seeds
+EUROC_TO_UZH,UZH_FPV,indoor_45_13_snapdragon,TCN,1.9157421,7.589665489,11.13201809,sequence-specific p95 of processed q_f; mean over seeds
+EUROC_TO_UZH,UZH_FPV,indoor_45_14_snapdragon,TCN,2.453110662,9.409508066,14.56003347,sequence-specific p95 of processed q_f; mean over seeds
+EUROC_TO_UZH,UZH_FPV,outdoor_forward_1_snapdragon,TCN,1.560393851,5.603656313,11.40654808,sequence-specific p95 of processed q_f; mean over seeds
+EUROC_TO_UZH,UZH_FPV,indoor_forward_6_snapdragon,GRU,4.000391962,15.72880008,17.79954506,sequence-specific p95 of processed q_f; mean over seeds
+EUROC_TO_UZH,UZH_FPV,indoor_forward_9_snapdragon,GRU,0.8721521701,1.884357215,12.2869086,sequence-specific p95 of processed q_f; mean over seeds
+EUROC_TO_UZH,UZH_FPV,indoor_forward_10_snapdragon,GRU,1.05252624,3.194790755,12.44105276,sequence-specific p95 of processed q_f; mean over seeds
+EUROC_TO_UZH,UZH_FPV,indoor_45_2_snapdragon,GRU,2.169560841,9.106360644,11.07949287,sequence-specific p95 of processed q_f; mean over seeds
+EUROC_TO_UZH,UZH_FPV,indoor_45_4_snapdragon,GRU,2.600364596,11.01111689,10.68103471,sequence-specific p95 of processed q_f; mean over seeds
+EUROC_TO_UZH,UZH_FPV,indoor_45_13_snapdragon,GRU,1.880170555,7.722861596,11.13201809,sequence-specific p95 of processed q_f; mean over seeds
+EUROC_TO_UZH,UZH_FPV,indoor_45_14_snapdragon,GRU,2.528019637,10.02386421,14.56003347,sequence-specific p95 of processed q_f; mean over seeds
+EUROC_TO_UZH,UZH_FPV,outdoor_forward_1_snapdragon,GRU,1.537120625,5.74457115,11.40654808,sequence-specific p95 of processed q_f; mean over seeds
+EUROC_TO_UZH,UZH_FPV,indoor_forward_6_snapdragon,TRANSFORMER,4.276050264,16.26222508,17.79954506,sequence-specific p95 of processed q_f; mean over seeds
+EUROC_TO_UZH,UZH_FPV,indoor_forward_9_snapdragon,TRANSFORMER,1.030928846,2.252575977,12.2869086,sequence-specific p95 of processed q_f; mean over seeds
+EUROC_TO_UZH,UZH_FPV,indoor_forward_10_snapdragon,TRANSFORMER,1.251095988,3.874457588,12.44105276,sequence-specific p95 of processed q_f; mean over seeds
+EUROC_TO_UZH,UZH_FPV,indoor_45_2_snapdragon,TRANSFORMER,2.199387026,9.065314624,11.07949287,sequence-specific p95 of processed q_f; mean over seeds
+EUROC_TO_UZH,UZH_FPV,indoor_45_4_snapdragon,TRANSFORMER,2.645256119,10.97973315,10.68103471,sequence-specific p95 of processed q_f; mean over seeds
+EUROC_TO_UZH,UZH_FPV,indoor_45_13_snapdragon,TRANSFORMER,1.900848192,7.522690186,11.13201809,sequence-specific p95 of processed q_f; mean over seeds
+EUROC_TO_UZH,UZH_FPV,indoor_45_14_snapdragon,TRANSFORMER,2.684518898,10.28849648,14.56003347,sequence-specific p95 of processed q_f; mean over seeds
+EUROC_TO_UZH,UZH_FPV,outdoor_forward_1_snapdragon,TRANSFORMER,1.592594284,5.673930381,11.40654808,sequence-specific p95 of processed q_f; mean over seeds
+UZH_TO_EUROC,EUROC,V1_01_easy,TCN,0.5492607363,1.278388968,10.59911164,sequence-specific p95 of processed q_f; mean over seeds
+UZH_TO_EUROC,EUROC,V1_02_medium,TCN,0.7515307635,1.663690906,11.30093467,sequence-specific p95 of processed q_f; mean over seeds
+UZH_TO_EUROC,EUROC,V1_03_difficult,TCN,0.7877053176,1.692097137,11.48826622,sequence-specific p95 of processed q_f; mean over seeds
+UZH_TO_EUROC,EUROC,V2_01_easy,TCN,0.9505216063,2.795718624,10.98371699,sequence-specific p95 of processed q_f; mean over seeds
+UZH_TO_EUROC,EUROC,V2_02_medium,TCN,0.9377700447,2.104818298,11.60218482,sequence-specific p95 of processed q_f; mean over seeds
+UZH_TO_EUROC,EUROC,V2_03_difficult,TCN,0.975504881,2.367785254,11.58910389,sequence-specific p95 of processed q_f; mean over seeds
+UZH_TO_EUROC,EUROC,V1_01_easy,GRU,0.5104666487,1.22790945,10.59911164,sequence-specific p95 of processed q_f; mean over seeds
+UZH_TO_EUROC,EUROC,V1_02_medium,GRU,0.7221675058,1.587198056,11.30093467,sequence-specific p95 of processed q_f; mean over seeds
+UZH_TO_EUROC,EUROC,V1_03_difficult,GRU,0.7731166547,1.620493674,11.48826622,sequence-specific p95 of processed q_f; mean over seeds
+UZH_TO_EUROC,EUROC,V2_01_easy,GRU,0.9497456778,2.887225867,10.98371699,sequence-specific p95 of processed q_f; mean over seeds
+UZH_TO_EUROC,EUROC,V2_02_medium,GRU,0.9147573936,2.065033046,11.60218482,sequence-specific p95 of processed q_f; mean over seeds
+UZH_TO_EUROC,EUROC,V2_03_difficult,GRU,0.9579908658,2.366610592,11.58910389,sequence-specific p95 of processed q_f; mean over seeds
+UZH_TO_EUROC,EUROC,V1_01_easy,TRANSFORMER,0.5121124068,1.19783504,10.59911164,sequence-specific p95 of processed q_f; mean over seeds
+UZH_TO_EUROC,EUROC,V1_02_medium,TRANSFORMER,0.7243424698,1.511075548,11.30093467,sequence-specific p95 of processed q_f; mean over seeds
+UZH_TO_EUROC,EUROC,V1_03_difficult,TRANSFORMER,0.7914370094,1.552593708,11.48826622,sequence-specific p95 of processed q_f; mean over seeds
+UZH_TO_EUROC,EUROC,V2_01_easy,TRANSFORMER,0.9475556423,2.738628203,10.98371699,sequence-specific p95 of processed q_f; mean over seeds
+UZH_TO_EUROC,EUROC,V2_02_medium,TRANSFORMER,0.9378466497,1.967925342,11.60218482,sequence-specific p95 of processed q_f; mean over seeds
+UZH_TO_EUROC,EUROC,V2_03_difficult,TRANSFORMER,0.9879778579,2.267704297,11.58910389,sequence-specific p95 of processed q_f; mean over seeds
+WITHIN_EUROC,EUROC,V1_01_easy,B0_PERSISTENCE,0.5639882678,1.037209219,10.59911164,Stage-2 frozen baseline; threshold reused
+WITHIN_EUROC,EUROC,V1_01_easy,BEST_RIDGE,0.4282225119,0.9943174561,10.59911164,Stage-2 frozen baseline; threshold reused
+UZH_TO_EUROC,EUROC,V1_01_easy,B0_PERSISTENCE,0.5639882678,1.037209219,10.59911164,Stage-2 frozen baseline; threshold reused
+UZH_TO_EUROC,EUROC,V1_01_easy,BEST_RIDGE,0.4780778022,1.06280083,10.59911164,Stage-2 frozen baseline; threshold reused
+WITHIN_EUROC,EUROC,V1_02_medium,B0_PERSISTENCE,0.7925081888,1.439169732,11.30093467,Stage-2 frozen baseline; threshold reused
+WITHIN_EUROC,EUROC,V1_02_medium,BEST_RIDGE,0.637054547,1.527730595,11.30093467,Stage-2 frozen baseline; threshold reused
+UZH_TO_EUROC,EUROC,V1_02_medium,B0_PERSISTENCE,0.7925081888,1.439169732,11.30093467,Stage-2 frozen baseline; threshold reused
+UZH_TO_EUROC,EUROC,V1_02_medium,BEST_RIDGE,0.768528348,1.789836877,11.30093467,Stage-2 frozen baseline; threshold reused
+WITHIN_EUROC,EUROC,V1_03_difficult,B0_PERSISTENCE,0.8383637495,1.341663923,11.48826622,Stage-2 frozen baseline; threshold reused
+WITHIN_EUROC,EUROC,V1_03_difficult,BEST_RIDGE,0.6725911889,1.598723798,11.48826622,Stage-2 frozen baseline; threshold reused
+UZH_TO_EUROC,EUROC,V1_03_difficult,B0_PERSISTENCE,0.8383637495,1.341663923,11.48826622,Stage-2 frozen baseline; threshold reused
+UZH_TO_EUROC,EUROC,V1_03_difficult,BEST_RIDGE,0.7873280639,1.749735434,11.48826622,Stage-2 frozen baseline; threshold reused
+WITHIN_EUROC,EUROC,V2_01_easy,B0_PERSISTENCE,1.130114331,3.000857059,10.98371699,Stage-2 frozen baseline; threshold reused
+WITHIN_EUROC,EUROC,V2_01_easy,BEST_RIDGE,0.9015393238,2.743909451,10.98371699,Stage-2 frozen baseline; threshold reused
+UZH_TO_EUROC,EUROC,V2_01_easy,B0_PERSISTENCE,1.130114331,3.000857059,10.98371699,Stage-2 frozen baseline; threshold reused
+UZH_TO_EUROC,EUROC,V2_01_easy,BEST_RIDGE,0.9278642307,2.751625354,10.98371699,Stage-2 frozen baseline; threshold reused
+WITHIN_EUROC,EUROC,V2_02_medium,B0_PERSISTENCE,1.04142078,2.00048292,11.60218482,Stage-2 frozen baseline; threshold reused
+WITHIN_EUROC,EUROC,V2_02_medium,BEST_RIDGE,0.8325012431,2.011727382,11.60218482,Stage-2 frozen baseline; threshold reused
+UZH_TO_EUROC,EUROC,V2_02_medium,B0_PERSISTENCE,1.04142078,2.00048292,11.60218482,Stage-2 frozen baseline; threshold reused
+UZH_TO_EUROC,EUROC,V2_02_medium,BEST_RIDGE,0.9468636888,2.14911834,11.60218482,Stage-2 frozen baseline; threshold reused
+WITHIN_EUROC,EUROC,V2_03_difficult,B0_PERSISTENCE,1.135551303,2.395332738,11.58910389,Stage-2 frozen baseline; threshold reused
+WITHIN_EUROC,EUROC,V2_03_difficult,BEST_RIDGE,0.8976286138,2.356807611,11.58910389,Stage-2 frozen baseline; threshold reused
+UZH_TO_EUROC,EUROC,V2_03_difficult,B0_PERSISTENCE,1.135551303,2.395332738,11.58910389,Stage-2 frozen baseline; threshold reused
+UZH_TO_EUROC,EUROC,V2_03_difficult,BEST_RIDGE,0.9832615128,2.435291285,11.58910389,Stage-2 frozen baseline; threshold reused
+WITHIN_UZH,UZH_FPV,indoor_forward_6_snapdragon,B0_PERSISTENCE,4.075000184,13.71351545,17.79954506,Stage-2 frozen baseline; threshold reused
+WITHIN_UZH,UZH_FPV,indoor_forward_6_snapdragon,BEST_RIDGE,3.481177485,13.26656983,17.79954506,Stage-2 frozen baseline; threshold reused
+EUROC_TO_UZH,UZH_FPV,indoor_forward_6_snapdragon,B0_PERSISTENCE,4.075000184,13.71351545,17.79954506,Stage-2 frozen baseline; threshold reused
+EUROC_TO_UZH,UZH_FPV,indoor_forward_6_snapdragon,BEST_RIDGE,3.809991061,14.47000665,17.79954506,Stage-2 frozen baseline; threshold reused
+WITHIN_UZH,UZH_FPV,indoor_forward_9_snapdragon,B0_PERSISTENCE,0.7614361482,0.8833404571,12.2869086,Stage-2 frozen baseline; threshold reused
+WITHIN_UZH,UZH_FPV,indoor_forward_9_snapdragon,BEST_RIDGE,0.767715293,1.163070879,12.2869086,Stage-2 frozen baseline; threshold reused
+EUROC_TO_UZH,UZH_FPV,indoor_forward_9_snapdragon,B0_PERSISTENCE,0.7614361482,0.8833404571,12.2869086,Stage-2 frozen baseline; threshold reused
+EUROC_TO_UZH,UZH_FPV,indoor_forward_9_snapdragon,BEST_RIDGE,0.8969342115,1.9409457,12.2869086,Stage-2 frozen baseline; threshold reused
+WITHIN_UZH,UZH_FPV,indoor_forward_10_snapdragon,B0_PERSISTENCE,0.94906914,2.157787782,12.44105276,Stage-2 frozen baseline; threshold reused
+WITHIN_UZH,UZH_FPV,indoor_forward_10_snapdragon,BEST_RIDGE,0.8934917377,2.291680957,12.44105276,Stage-2 frozen baseline; threshold reused
+EUROC_TO_UZH,UZH_FPV,indoor_forward_10_snapdragon,B0_PERSISTENCE,0.94906914,2.157787782,12.44105276,Stage-2 frozen baseline; threshold reused
+EUROC_TO_UZH,UZH_FPV,indoor_forward_10_snapdragon,BEST_RIDGE,1.048908765,3.060906324,12.44105276,Stage-2 frozen baseline; threshold reused
+WITHIN_UZH,UZH_FPV,indoor_45_2_snapdragon,B0_PERSISTENCE,2.573046277,9.633296645,11.07949287,Stage-2 frozen baseline; threshold reused
+WITHIN_UZH,UZH_FPV,indoor_45_2_snapdragon,BEST_RIDGE,2.105835822,8.339675526,11.07949287,Stage-2 frozen baseline; threshold reused
+EUROC_TO_UZH,UZH_FPV,indoor_45_2_snapdragon,B0_PERSISTENCE,2.573046277,9.633296645,11.07949287,Stage-2 frozen baseline; threshold reused
+EUROC_TO_UZH,UZH_FPV,indoor_45_2_snapdragon,BEST_RIDGE,2.140724636,8.684256998,11.07949287,Stage-2 frozen baseline; threshold reused
+WITHIN_UZH,UZH_FPV,indoor_45_4_snapdragon,B0_PERSISTENCE,3.160309351,12.26579237,10.68103471,Stage-2 frozen baseline; threshold reused
+WITHIN_UZH,UZH_FPV,indoor_45_4_snapdragon,BEST_RIDGE,2.468347002,9.954414274,10.68103471,Stage-2 frozen baseline; threshold reused
+EUROC_TO_UZH,UZH_FPV,indoor_45_4_snapdragon,B0_PERSISTENCE,3.160309351,12.26579237,10.68103471,Stage-2 frozen baseline; threshold reused
+EUROC_TO_UZH,UZH_FPV,indoor_45_4_snapdragon,BEST_RIDGE,2.634099239,10.78060851,10.68103471,Stage-2 frozen baseline; threshold reused
+WITHIN_UZH,UZH_FPV,indoor_45_13_snapdragon,B0_PERSISTENCE,2.461928413,9.165309932,11.13201809,Stage-2 frozen baseline; threshold reused
+WITHIN_UZH,UZH_FPV,indoor_45_13_snapdragon,BEST_RIDGE,1.929808891,7.512383375,11.13201809,Stage-2 frozen baseline; threshold reused
+EUROC_TO_UZH,UZH_FPV,indoor_45_13_snapdragon,B0_PERSISTENCE,2.461928413,9.165309932,11.13201809,Stage-2 frozen baseline; threshold reused
+EUROC_TO_UZH,UZH_FPV,indoor_45_13_snapdragon,BEST_RIDGE,2.000733662,7.927485129,11.13201809,Stage-2 frozen baseline; threshold reused
+WITHIN_UZH,UZH_FPV,indoor_45_14_snapdragon,B0_PERSISTENCE,2.619887629,9.216093978,14.56003347,Stage-2 frozen baseline; threshold reused
+WITHIN_UZH,UZH_FPV,indoor_45_14_snapdragon,BEST_RIDGE,2.354346371,8.571770558,14.56003347,Stage-2 frozen baseline; threshold reused
+EUROC_TO_UZH,UZH_FPV,indoor_45_14_snapdragon,B0_PERSISTENCE,2.619887629,9.216093978,14.56003347,Stage-2 frozen baseline; threshold reused
+EUROC_TO_UZH,UZH_FPV,indoor_45_14_snapdragon,BEST_RIDGE,2.41386418,9.122458844,14.56003347,Stage-2 frozen baseline; threshold reused
+WITHIN_UZH,UZH_FPV,outdoor_forward_1_snapdragon,B0_PERSISTENCE,2.193506128,6.700797618,11.40654808,Stage-2 frozen baseline; threshold reused
+WITHIN_UZH,UZH_FPV,outdoor_forward_1_snapdragon,BEST_RIDGE,1.544402622,5.608218259,11.40654808,Stage-2 frozen baseline; threshold reused
+EUROC_TO_UZH,UZH_FPV,outdoor_forward_1_snapdragon,B0_PERSISTENCE,2.193506128,6.700797618,11.40654808,Stage-2 frozen baseline; threshold reused
+EUROC_TO_UZH,UZH_FPV,outdoor_forward_1_snapdragon,BEST_RIDGE,1.575942302,5.61437465,11.40654808,Stage-2 frozen baseline; threshold reused

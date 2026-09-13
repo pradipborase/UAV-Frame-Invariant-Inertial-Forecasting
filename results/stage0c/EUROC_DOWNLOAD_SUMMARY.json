@@ -1,0 +1,39 @@
+{
+  "utc": "2026-09-12T16:56:04Z",
+  "consumed_bytes": 12055648375,
+  "budget_bytes": 16106127360,
+  "rows": [
+    {
+      "sequence_id": "V1_01_easy,V1_02_medium,V1_03_difficult",
+      "official_source": "YES",
+      "source_url": "https://www.research-collection.ethz.ch/server/api/core/bitstreams/02ecda9a-298f-498b-970c-b7c44334d880/content",
+      "archive_name": "vicon_room1.zip",
+      "retrieval_utc": "2026-09-12T16:53:27Z",
+      "local_path": "data\\raw\\euroc\\vicon_room1.zip",
+      "remote_size_bytes": "6042263426",
+      "downloaded_size_bytes": "6042263426",
+      "sha256": "fe73c27be6dc8ac00493b78b750d36b144daf49eea7fdf3163e934527c1b5297",
+      "etag": "",
+      "last_modified": "",
+      "download_status": "HASH_VERIFIED",
+      "extraction_status": "NOT_EXTRACTED",
+      "notes": "Official ETH Research Collection ORIGINAL bitstream. Nested sequence zip+bag."
+    },
+    {
+      "sequence_id": "V2_01_easy,V2_02_medium,V2_03_difficult",
+      "official_source": "YES",
+      "source_url": "https://www.research-collection.ethz.ch/server/api/core/bitstreams/ea12bc01-3677-4b4c-853d-87c7870b8c44/content",
+      "archive_name": "vicon_room2.zip",
+      "retrieval_utc": "2026-09-12T16:56:04Z",
+      "local_path": "data\\raw\\euroc\\vicon_room2.zip",
+      "remote_size_bytes": "6013384949",
+      "downloaded_size_bytes": "6013384949",
+      "sha256": "6daf2cbc2de9a6bc4e02866c99ed01c29a5c7c164756f06c4f72656192977cfc",
+      "etag": "",
+      "last_modified": "",
+      "download_status": "HASH_VERIFIED",
+      "extraction_status": "NOT_EXTRACTED",
+      "notes": "Official ETH Research Collection ORIGINAL bitstream. Nested sequence zip+bag."
+    }
+  ]
+}

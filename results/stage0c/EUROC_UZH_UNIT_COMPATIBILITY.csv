@@ -1,0 +1,6 @@
+quantity,euroc_value,uzh_value,compatibility,fixed_conversion,target_fitted_required,evidence,notes
+acceleration unit,m/s^2,m/s^2,DIRECT,NO,NO,VERIFIED_FROM_RAW_FILE / Stage-0 UZH audit,no distribution-estimated scale
+angular-rate unit,rad/s,rad/s,DIRECT,NO,NO,VERIFIED_FROM_RAW_FILE,
+timestamp unit,nanoseconds,seconds in imu.txt,DOCUMENTED_FIXED_CONVERSION,ns_to_s for EuRoC if nanoseconds,NO,headers; official MATLAB /1e9,
+frame convention,IMU S; T_BS S->B,IMU S; vehicle body UNRESOLVED,UNRESOLVED,not for a shared body,NO,frame audits,Different sensor axes; not a unit conversion. Native-frame analysis remains allowed.
+physical interpretation,RAW_ACCELEROMETER_SPECIFIC_FORCE,RAW_ACCELEROMETER_SPECIFIC_FORCE,DIRECT,NO,NO,IMU audits,

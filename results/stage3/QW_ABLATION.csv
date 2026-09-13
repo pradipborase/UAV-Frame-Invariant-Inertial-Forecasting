@@ -1,0 +1,5 @@
+source_dataset,architecture,input,config_id,mean_source_val_rmse,selected_epochs_ref
+EUROC,GRU,q_f,GRU07,0.7312987662,49
+EUROC,GRU,q_f+q_w,GRU07,0.7300144951,49
+UZH_FPV,TRANSFORMER,q_f,TR05,1.920391702,33
+UZH_FPV,TRANSFORMER,q_f+q_w,TR05,1.907869478,33

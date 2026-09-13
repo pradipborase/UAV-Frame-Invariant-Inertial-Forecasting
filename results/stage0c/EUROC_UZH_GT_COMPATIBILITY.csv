@@ -1,0 +1,3 @@
+item,euroc,uzh_fpv,supports_temporal_segmentation,supports_dynamics_characterization,supports_pose_reference_evaluation,supports_gt_acceleration_derivation,evidence,notes
+reference source,Vicon 6-DoF (downloaded); Leica MS50 for MH (not downloaded),Leica MS60 prism + IMU-aided batch pose,YES,YES_AS_REFERENCE_TRAJECTORY,YES_WITH_SYNC_CAVEATS,NOT_AUTHORIZED,dataset papers; GT files,POSTPROCESSED REFERENCE / ESTIMATED STATE fields must be distinguished
+direct sensor measurement vs estimate,Vicon pose is a mocap reference; state velocity/biases are estimator outputs,Leica measures position; public 6-DoF pose is batch-optimized with IMU,YES,LIMITED,YES,NOT_AUTHORIZED,VERIFIED_FROM_DATASET_PAPER,UZH pose uses IMU so it must not become an IMU label

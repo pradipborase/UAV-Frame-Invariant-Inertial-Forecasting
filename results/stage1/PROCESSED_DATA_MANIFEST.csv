@@ -1,0 +1,15 @@
+dataset,sequence_id,local_path,n_rows,sha256,q_f_unit,q_w_unit,notes
+EUROC,V1_01_easy,data\processed\stage1\EUROC_V1_01_easy.csv,14460,e289d983c58eef5a6ef4499f63948a29698e05079c9244c9d8b23f56280b10a4,m/s^2,rad/s,canonical Stage-1 stream
+EUROC,V1_02_medium,data\processed\stage1\EUROC_V1_02_medium.csv,8450,9d8eecaae3c70529ae732141e4928f13943b8c2de4378b06261a17e837804451,m/s^2,rad/s,canonical Stage-1 stream
+EUROC,V1_03_difficult,data\processed\stage1\EUROC_V1_03_difficult.csv,10650,c6839f33ca8ad06f48c276de634ab5e40dd0dd1b12409e50bb90b098f70ae6bd,m/s^2,rad/s,canonical Stage-1 stream
+EUROC,V2_01_easy,data\processed\stage1\EUROC_V2_01_easy.csv,11300,3af10b02c6d99b217121b66917b8a268da6884b7fac1c2ff6984b98a63b64bb5,m/s^2,rad/s,canonical Stage-1 stream
+EUROC,V2_02_medium,data\processed\stage1\EUROC_V2_02_medium.csv,11645,aaac5010e182ebe6ed6e3cf6a3c535e16b2196944ac555279ef0520db8da0e45,m/s^2,rad/s,canonical Stage-1 stream
+EUROC,V2_03_difficult,data\processed\stage1\EUROC_V2_03_difficult.csv,11585,63473fa72e88027f4bf979e3ac000710b9b1ed41f13ab4ad385b96fe50e2919b,m/s^2,rad/s,canonical Stage-1 stream
+UZH_FPV,indoor_forward_6_snapdragon,data\processed\stage1\UZH_FPV_indoor_forward_6_snapdragon.csv,6863,d342796c6ad625d7eba65ea357becdaeffad03bc3e4573e2ebb99ea9cba07323,m/s^2,rad/s,canonical Stage-1 stream
+UZH_FPV,indoor_forward_9_snapdragon,data\processed\stage1\UZH_FPV_indoor_forward_9_snapdragon.csv,7583,2a4c51c1aa6e311787c496557f71d232a0bae55ecd817d33f2524b8d0482651a,m/s^2,rad/s,canonical Stage-1 stream
+UZH_FPV,indoor_forward_10_snapdragon,data\processed\stage1\UZH_FPV_indoor_forward_10_snapdragon.csv,7527,3be2a5d37f8eb2dd2837c3f99a5feb502be366a6a62a9a8093ed10d57239274a,m/s^2,rad/s,canonical Stage-1 stream
+UZH_FPV,indoor_45_2_snapdragon,data\processed\stage1\UZH_FPV_indoor_45_2_snapdragon.csv,7368,76ac7c5669cc5d25254a3aefa15e98c99e3f120673f6a56e4b9c2218ca4075aa,m/s^2,rad/s,canonical Stage-1 stream
+UZH_FPV,indoor_45_4_snapdragon,data\processed\stage1\UZH_FPV_indoor_45_4_snapdragon.csv,6523,4ea025d5c393d5b3e662cc29d2926ed55bac6dd9cd1391767f99f10da4dd5bfc,m/s^2,rad/s,canonical Stage-1 stream
+UZH_FPV,indoor_45_13_snapdragon,data\processed\stage1\UZH_FPV_indoor_45_13_snapdragon.csv,6094,e365b7ac628e039cf7374da2b5dd20b035401f125add1b064ad28fe5e420dd95,m/s^2,rad/s,canonical Stage-1 stream
+UZH_FPV,indoor_45_14_snapdragon,data\processed\stage1\UZH_FPV_indoor_45_14_snapdragon.csv,6354,b268621cf84fdce56b6c0d49d70abd3650fc6d2f8930dfd969bbabdba61a78b4,m/s^2,rad/s,canonical Stage-1 stream
+UZH_FPV,outdoor_forward_1_snapdragon,data\processed\stage1\UZH_FPV_outdoor_forward_1_snapdragon.csv,8476,851d8a8317da022515c4fde5826f7cb4370a89eb2059bea1156f57263b8490ae,m/s^2,rad/s,canonical Stage-1 stream

@@ -1,0 +1,3 @@
+dataset,platform,retained_sequences,imu_rate_native,common_rate,specific_force_unit,angular_rate_unit,reference_trajectory,primary_role
+EuRoC MAV (D1),Asctec Firefly hex-rotor; ADIS16448,6,~200 Hz,100 Hz,m/s^2,rad/s,Vicon 6-DoF pose / ASL state estimate (not IMU labels),source and target in opposite transfer directions
+UZH-FPV (D2),racing quadrotor; Snapdragon Flight IMU,8,~500 Hz,100 Hz,m/s^2,rad/s,Leica + IMU-aided batch pose (not IMU labels),source and target in opposite transfer directions

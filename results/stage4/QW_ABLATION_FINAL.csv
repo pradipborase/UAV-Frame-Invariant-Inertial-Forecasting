@@ -1,0 +1,3 @@
+source_dataset,selected_advanced_architecture,config_id,qf_only_val_rmse,qf_qw_val_rmse,absolute_difference,relative_difference,interpretation
+EUROC,GRU,GRU07,0.7312987662,0.7300144951,-0.0012842711,-0.001756151055,modest auxiliary contribution
+UZH_FPV,TRANSFORMER,TR05,1.920391702,1.907869478,-0.012522224,-0.006520661377,modest auxiliary contribution

@@ -1,0 +1,649 @@
+\documentclass[preprint,12pt]{elsarticle}
+
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{threeparttable}
+\usepackage{siunitx}
+\usepackage{graphicx}
+\graphicspath{{figures/}}
+\setkeys{Gin}{draft=false}
+\usepackage{placeins}
+\usepackage{microtype}
+\usepackage{hyperref}
+\hypersetup{hidelinks}
+\usepackage{enumitem}
+
+\journal{Measurement}
+
+\sisetup{detect-all,per-mode=symbol}
+\newcommand{\qf}{q_f}
+\newcommand{\qw}{q_\omega}
+\newcommand{\vect}[1]{\boldsymbol{#1}}
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{A Frame-Invariant Evaluation Protocol for Cross-Platform Short-Horizon UAV Inertial Forecasting}
+
+% Author information taken from the attached manuscript.
+\author[aff1]{Pradip Diwan Borase\corref{cor1}}
+\ead{pradip.borase.phd24@nsut.ac.in}
+\author[aff1]{Vijyant Agarwal}
+\cortext[cor1]{Corresponding author.}
+\address[aff1]{Department of Mechanical Engineering, Netaji Subhas University of Technology, New Delhi, Delhi, India}
+
+\begin{abstract}
+Comparative evaluation of learning-based inertial forecasting across UAV platforms is complicated by differences in sensor coordinate frames, sampling rates, motion regimes, and data-processing choices. This work presents a frame-invariant, leakage-controlled protocol for short-horizon UAV inertial forecasting and tests whether increased model complexity improves cross-platform generalization. To avoid target-domain axis alignment, accelerometer specific-force magnitude, $\qf=\lVert\mathbf{f}\rVert_2$, is used as the forecasting target and angular-speed magnitude, $\qw=\lVert\boldsymbol{\omega}\rVert_2$, as an auxiliary input. Six EuRoC MAV flights and eight UZH-FPV flights are causally resampled to 100~Hz and evaluated using a common 1.0~s candidate history and 0.20~s prediction horizon; TCN, GRU, and Transformer consume all 100 history samples, whereas Ridge uses a source-validated suffix of that same candidate window. All fitted transformations, hyperparameters, architecture choices, and checkpoints are obtained from source-domain recordings and frozen before zero-shot target evaluation; flight recordings, rather than overlapping windows, are the inferential units. Persistence, Ridge regression, TCN, GRU, and a compact Transformer are compared. Ridge attains an equal-sequence RMSE of 0.728~\si{\metre\per\second\squared} within EuRoC. Within UZH-FPV, Transformer improves Ridge from 1.943 to 1.895~\si{\metre\per\second\squared}, but the same architecture reaches 2.198~\si{\metre\per\second\squared} in EuRoC$\rightarrow$UZH transfer versus 2.065~\si{\metre\per\second\squared} for Ridge. In UZH$\rightarrow$EuRoC transfer, GRU attains 0.805~\si{\metre\per\second\squared} versus 0.831~\si{\metre\per\second\squared} for source-selected Ridge. Across the four contexts, the best learned model reduces RMSE relative to Persistence by 12.2--20.6\%. The contribution is the controlled cross-platform evaluation framework---common scalar physical-quantity definition, causal harmonization, source-only fitting, flight-level inference, and frozen zero-shot transfer---rather than a new forecasting architecture. Added temporal-model complexity provides dataset-specific gains but does not consistently improve zero-shot cross-platform generalization.
+\end{abstract}
+
+\begin{keyword}
+Inertial measurement unit \sep UAV \sep specific force \sep frame invariance \sep cross-dataset generalization \sep zero-shot transfer
+\end{keyword}
+
+\end{frontmatter}
+
+\section{Introduction}
+\label{sec:introduction}
+
+Inertial measurement units (IMUs) provide high-rate measurements of specific force and angular velocity and remain fundamental to navigation, attitude estimation, motion tracking, and autonomous-system control. Their importance is particularly pronounced in unmanned aerial vehicles (UAVs), where high-frequency inertial sensing supports estimation and control during rapid vehicle dynamics and when exteroceptive sensing is degraded or unavailable. At the same time, raw inertial signals are affected by sensor noise, bias, mounting orientation, platform dynamics, and sampling characteristics, making data-driven inference from IMUs a challenging measurement problem.
+Recent work in \emph{Measurement} has also examined generalizable learning-based attitude estimation and data-driven enhancement of heterogeneous low-grade IMUs, confirming the relevance of generalization, sensor quality, and reproducible evaluation to contemporary measurement research \cite{Golroudbari2023Measurement,Sahu2026ALiMU}.
+
+Learning-based inertial navigation has developed rapidly over the past decade. IONet reformulated inertial odometry as learning motion quantities from temporal windows rather than directly relying on repeated integration of noisy acceleration measurements \cite{Chen2018IONet}. RIDI learned velocity corrections from inertial histories to reduce drift \cite{Yan2018RIDI}, while RoNIN studied robust neural inertial navigation under changes in subjects, device placements, and orientations \cite{Herath2020RoNIN}. TLIO subsequently combined learned displacement and uncertainty estimates with a tightly coupled filtering framework \cite{Liu2020TLIO}. More recently, representation learning has moved toward explicit generalization across frames and platforms. EqNIO introduced a subequivariant formulation intended to reduce sensitivity to gravity-aligned frame transformations \cite{Jayanth2025EqNIO}, and Tartan IMU investigated a shared inertial representation across multiple robotic embodiments \cite{Zhao2025TartanIMU}. These developments highlight that coordinate representation and platform dependence are central to whether an inertial learning system can generalize beyond its training domain.
+
+Most learning-based inertial studies, however, target displacement, velocity, attitude, pose, or sensor correction rather than the future inertial observation itself. Direct future-signal forecasting from IMUs is not unprecedented: Espinoza Jaramillo et al. forecasted multichannel wearable IMU activity signals with sequence-to-sequence deep networks for human activity prediction \cite{EspinozaJaramillo2023IMUForecast}. That work establishes relevant prior art for IMU-signal forecasting, but it addresses wearable human activity rather than physically heterogeneous UAV platforms. The narrower question considered here therefore remains insufficiently characterized: \emph{how well can future UAV inertial telemetry be predicted over short horizons under a frozen cross-platform protocol, and do conclusions obtained on one UAV dataset survive transfer to a physically different UAV platform?} This distinction is important because forecasting future IMU observations is not equivalent to estimating true translational acceleration, pose, or velocity from an independent reference system.
+
+Cross-dataset evaluation introduces additional methodological difficulties. Two datasets may use the same SI units while expressing three-axis measurements in different sensor coordinate frames; sampling rates may differ; longer recordings can generate disproportionately more overlapping windows; and normalization or model selection performed using target-domain data can unintentionally turn a purported zero-shot experiment into a form of adaptation. Moreover, treating overlapping windows as independent observations can substantially overstate the effective experimental sample size. A defensible comparison therefore requires explicit treatment of physical quantity, frame dependence, causal preprocessing, source-only fitting, and the independent experimental unit. This concern is consistent with recent measurement-science discussions of reproducibility in machine-learning-assisted measurement and of the distinction between model error and measurement uncertainty \cite{Benoit2025Reproducibility,Huber2025ModelError}.
+
+The present study addresses these issues using two established UAV datasets with different flight regimes: EuRoC MAV \cite{Burri2016EuRoC} and UZH-FPV \cite{Delmerico2019UZHFPV}. Six EuRoC Vicon-room flights and eight UZH-FPV Snapdragon flights are retained. Rather than assuming that the native $x$-, $y$-, and $z$-axes of the two IMUs correspond to identical vehicle directions, the study defines the rotation-invariant quantities
+\begin{equation}
+\qf(t)=\|\vect{f}(t)\|_2=\sqrt{f_x^2(t)+f_y^2(t)+f_z^2(t)},
+\label{eq:qf}
+\end{equation}
+and
+\begin{equation}
+\qw(t)=\|\vect{\omega}(t)\|_2=\sqrt{\omega_x^2(t)+\omega_y^2(t)+\omega_z^2(t)},
+\label{eq:qw}
+\end{equation}
+where $\vect{f}$ denotes accelerometer specific force in \si{\metre\per\second\squared} and $\vect{\omega}$ denotes angular velocity in \si{\radian\per\second}. The primary forecasting target is future $\qf$; $\qw$ is used only as an auxiliary input. Because Euclidean norms are invariant under proper orthonormal rotations, this representation removes dependence on an arbitrary fixed sensor-axis rotation for the scalar forecasting task without fitting a cross-dataset axis alignment. The trade-off is deliberate: directional information is discarded, so the formulation is not a substitute for three-axis body-frame state estimation.
+
+The experimental protocol is designed to separate predictive performance from target-domain adaptation. Both datasets are causally filtered and resampled to \SI{100}{\hertz}; each prediction origin provides a common \SI{1.0}{\second} candidate history and the subsequent \SI{0.20}{\second} target horizon. The neural models consume all 100 history samples, whereas Ridge uses only the most recent source-selected lag from the same candidate window. Results are reported at \SI{50}{\milli\second}, \SI{100}{\milli\second}, and \SI{200}{\milli\second}. Within-domain performance is evaluated by leave-one-recording-out testing, whereas cross-dataset evaluation freezes all source-domain preprocessing, hyperparameters, and model choices before application to the target dataset. No target data are used to estimate normalization parameters, coordinate alignment, early-stopping criteria, or architecture choices. The independent flight recording, rather than the overlapping prediction window, is retained as the inferential unit.
+
+The comparison uses persistence, regularized linear Ridge forecasting, a temporal convolutional network (TCN), a gated recurrent unit (GRU), and a compact Transformer as benchmark models rather than as proposed architectures. The results reveal a complexity--generalization trade-off. Within EuRoC, Ridge obtains an equal-sequence RMSE of \SI{0.728}{\metre\per\second\squared}, essentially matching the nonlinear models. Within UZH-FPV, the Transformer reduces RMSE from \SI{1.943}{\metre\per\second\squared} for Ridge to \SI{1.895}{\metre\per\second\squared}. That within-domain advantage does not survive EuRoC$\rightarrow$UZH transfer, for which the Transformer reaches \SI{2.198}{\metre\per\second\squared} compared with \SI{2.065}{\metre\per\second\squared} for Ridge. In the reverse direction, the GRU is best at \SI{0.805}{\metre\per\second\squared} versus \SI{0.831}{\metre\per\second\squared} for the source-selected Ridge comparator. These results motivate evaluating forecasting methods not only by within-domain accuracy but also by their stability under physically heterogeneous, frozen source-to-target transfer.
+
+The mathematical operation used to obtain $\qf$ and $\qw$ is the standard Euclidean norm and is not claimed as a novel contribution. Rather, the methodological contribution is to embed a physically motivated rotation-invariant scalar representation within a controlled cross-platform evaluation protocol that avoids unsupported target-fitted axis alignment and separates source-domain fitting from target-domain assessment. Accordingly, the principal contributions are:
+\begin{enumerate}[leftmargin=*]
+\item a physically defined common cross-dataset inertial quantity for the scalar forecasting task, using specific-force magnitude (and angular-speed magnitude as an auxiliary quantity) when a justified common body-axis mapping is unavailable, thereby avoiding data-driven target-axis registration;
+\item a leakage-controlled evaluation protocol combining causal temporal harmonization, source-only normalization and model selection, flight-recording-level inference, and frozen zero-shot transfer in both directions; and
+\item an empirical benchmark of persistence, regularized linear forecasting, and compact nonlinear temporal models showing that additional model complexity yields domain-dependent gains while Ridge remains strongly competitive under cross-platform zero-shot transfer.
+\end{enumerate}
+A pre-specified secondary analysis further examines forecasting difficulty during high-specific-force intervals without changing the primary estimand.
+
+\section{Related Work}
+\label{sec:related}
+
+\subsection{Learning-based inertial inference and sensor enhancement}
+
+Learning-based inertial methods have evolved from direct motion regression toward hybrid model--learning pipelines, learned sensor correction, and explicit uncertainty or calibration modules. IONet demonstrated that temporal windows of raw inertial measurements can be mapped to motion quantities without conventional double integration \cite{Chen2018IONet}. RIDI used learned velocity information to constrain inertial integration \cite{Yan2018RIDI}, whereas RoNIN emphasized robustness to subjects, device placement, and orientation changes \cite{Herath2020RoNIN}. TLIO coupled learned displacement and uncertainty estimates with a tightly integrated estimator \cite{Liu2020TLIO}. Related hybrid approaches include RINS-W, which used learned motion constraints inside a filtering framework \cite{Brossard2019RINSW}, and AI-IMU dead reckoning, in which a neural network adapts filter noise parameters for wheeled-vehicle inertial navigation \cite{Brossard2020AIIMU}. These studies show that learned inertial representations can complement rather than replace model-based estimation.
+
+A second line of work learns sensor corrections or more physically structured intermediate quantities. Brossard et al. used dilated convolutional networks to denoise gyroscope measurements for open-loop attitude estimation \cite{Brossard2020DenoiseGyro}. Zhang et al. proposed recurrent processing of IMU measurements to estimate observable integration terms before numerical navigation updates \cite{Zhang2021IMUDataProcessing}. Yuan and Wang introduced self-supervised IMU denoising for inertial-aided navigation \cite{Yuan2023SelfSupervised}, while DUET learned online IMU calibration errors such as bias, scale factor, and axis misalignment from external motion supervision \cite{Liu2023DUET}. Jin et al. embedded learned information within a nonlinear manifold-based inertial estimator \cite{Jin2023LearningAided}, and IDOL explicitly separated learned orientation estimation from subsequent learned localization \cite{Sun2021IDOL}. In \emph{Measurement}, Golroudbari and Sabour reported generalizable end-to-end attitude estimation across multiple public datasets and sampling rates \cite{Golroudbari2023Measurement}, while ALiMU considered end-to-end enhancement of heterogeneous low-grade IMUs \cite{Sahu2026ALiMU}. These studies establish the importance of learning with IMU time histories, but their targets are predominantly navigation states, calibration quantities, or denoised measurements.
+
+Future IMU-signal forecasting has also been studied directly outside the UAV setting. Espinoza Jaramillo et al. used sequence-to-sequence LSTM forecasters, including attention and positional encoding, to predict future wearable IMU activity signals for subsequent human-activity prediction \cite{EspinozaJaramillo2023IMUForecast}. The present study therefore does not claim that forecasting future IMU measurements is itself new. Its narrower contribution is the controlled evaluation of short-horizon UAV inertial forecasting across heterogeneous platforms using a frame-invariant scalar quantity, source-only fitting, frozen zero-shot transfer, and flight-level inference.
+
+\subsection{Frame dependence and cross-platform generalization}
+
+A three-axis accelerometer or gyroscope is intrinsically frame dependent: the individual vector components change under a rotation of the sensor axes even when the underlying physical motion is unchanged. The inertial-learning literature has addressed this issue in several ways. RoNIN studied robustness to device orientation and placement \cite{Herath2020RoNIN}; IDOL estimated orientation before localization so that the downstream network could operate in a more consistent frame \cite{Sun2021IDOL}; and DUET explicitly learned sensor calibration terms including axis misalignment \cite{Liu2023DUET}. More recently, EqNIO formulated neural inertial odometry using subequivariant representations intended to improve generalization under gravity-preserving frame transformations \cite{Jayanth2025EqNIO}. Tartan IMU extended the generalization problem across heterogeneous embodiments, including multiple robotic platforms \cite{Zhao2025TartanIMU}.
+
+These studies motivate a careful distinction between \emph{learning a frame handling mechanism} and \emph{choosing a frame-invariant scalar quantity}. The present work follows the latter strategy. Because a common EuRoC--UZH body-axis transformation could not be justified from the official metadata for both datasets, a target-data-fitted alignment would compromise the intended zero-shot protocol. The primary task therefore uses the Euclidean specific-force magnitude in Eq.~\eqref{eq:qf}, with angular-speed magnitude in Eq.~\eqref{eq:qw} as an auxiliary quantity. This is deliberately narrower than equivariant odometry: it sacrifices directional information but provides a physically transparent scalar target whose value is unchanged by a fixed proper orthonormal rotation of the sensor frame.
+
+\subsection{Forecasting architectures and benchmark discipline}
+
+The forecasting literature provides a complementary reason to retain simple baselines when evaluating nonlinear sequence models. Ridge regression is a classical regularized linear method for correlated predictors \cite{Hoerl1970Ridge}. GRUs provide compact recurrent sequence modelling \cite{Cho2014GRU}, TCNs use causal/dilated convolutions to capture temporal structure \cite{Bai2018TCN}, and the Transformer introduced attention-based sequence representation \cite{Vaswani2017Attention}. Subsequent forecasting-specific architectures include Informer, which introduced ProbSparse attention for long sequences \cite{Zhou2021Informer}, Autoformer, which combined decomposition and autocorrelation mechanisms \cite{Wu2021Autoformer}, N-BEATS, which demonstrated strong univariate forecasting with residual fully connected blocks \cite{Oreshkin2020NBEATS}, and PatchTST, which tokenized time series into patches and showed strong multivariate forecasting and cross-dataset pretraining performance \cite{Nie2023PatchTST}. A broad survey by Wen et al. summarizes the rapid expansion of Transformer-based forecasting variants \cite{Wen2023TSTransformers}.
+
+Importantly, increased architectural sophistication does not guarantee superior forecasting accuracy. Zeng et al. showed that simple linear forecasting models can outperform several Transformer variants on widely used long-term forecasting benchmarks \cite{Zeng2023Transformers}. The TFB benchmark further argued for comprehensive and fair comparisons spanning statistical, machine-learning, and deep-learning methods, highlighting the risk of method-selection bias and inconsistent evaluation pipelines \cite{Qiu2024TFB}. This evidence directly motivates the benchmark hierarchy used here: Persistence and source-frozen Ridge serve as principal references, while TCN, GRU, and Transformer test whether additional temporal-model complexity yields gains that survive both within-domain and zero-shot cross-dataset evaluation. The causal linear-extrapolation baseline used during screening is retained only as a supplementary reference because it was uniformly inferior in the frozen baseline study.
+
+\subsection{Benchmark datasets, evaluation leakage, and reproducibility}
+
+EuRoC MAV provides synchronized visual-inertial data and accurately referenced micro-aerial-vehicle trajectories \cite{Burri2016EuRoC}, whereas UZH-FPV was designed around high-speed, aggressive quadrotor flight and provides Snapdragon IMU measurements together with reference trajectories \cite{Delmerico2019UZHFPV}. Their heterogeneity is useful for studying domain shift, but it also makes naive pooling inappropriate because the datasets differ in sensor hardware, native sampling rate, coordinate conventions, environments, and flight dynamics.
+
+Evaluation design is therefore as important as model choice. Varma and Simon showed that performance estimates become optimistically biased when model selection is performed within the same cross-validation procedure used to report error, motivating nested or otherwise properly separated model-selection and testing stages \cite{Varma2006CVBias}. More generally, recent measurement-science work has emphasized reproducibility challenges in machine-learning-assisted measurement \cite{Benoit2025Reproducibility} and the need to distinguish model error from metrological measurement uncertainty \cite{Huber2025ModelError}. In response, the present study treats cross-dataset forecasting as an evaluation problem rather than a data-merging exercise: all fitted scalers and model-selection decisions are source-only, source configurations are frozen before target evaluation, and the flight recording rather than overlapping windows is retained as the inferential unit. The reported bootstrap intervals consequently describe sequence-level sampling variability and are not interpreted as a GUM-style measurement-uncertainty budget.
+
+
+\section{Measurement Formulation and Datasets}
+\label{sec:measurement}
+
+\subsection{Measured inertial quantities and frame-invariant representation}
+
+Let $\vect{f}(t)=[f_x(t),f_y(t),f_z(t)]^\top\in\mathbb{R}^3$ denote the three-axis accelerometer specific-force measurement expressed in the native IMU frame, and let $\vect{\omega}(t)=[\omega_x(t),\omega_y(t),\omega_z(t)]^\top\in\mathbb{R}^3$ denote the corresponding angular-velocity measurement. Their SI units are \si{\metre\per\second\squared} and \si{\radian\per\second}, respectively. The scalar quantities used in the cross-dataset analysis are the Euclidean magnitudes defined in Eqs.~\eqref{eq:qf} and \eqref{eq:qw}.
+
+The use of magnitudes is motivated by the frame audit carried out before modelling. EuRoC provides a documented sensor-to-body transformation, whereas a comparably justified vehicle-body mapping for the retained UZH-FPV Snapdragon measurements was not available for the cross-dataset experiment. A data-fitted alignment would therefore introduce target-dependent adaptation. Instead, for any proper orthonormal rotation $\vect{R}$, $\vect{R}^\top\vect{R}=\vect{I}$ and
+\begin{equation}
+\|\vect{R}\vect{f}\|_2^2
+=\vect{f}^{\top}\vect{R}^{\top}\vect{R}\vect{f}
+=\vect{f}^{\top}\vect{f}
+=\|\vect{f}\|_2^2,
+\label{eq:rotation_invariance}
+\end{equation}
+with the same property holding for $\vect{\omega}$. Thus, $\qf$ and $\qw$ remove dependence on a fixed orthonormal sensor-axis rotation. This choice does not make the two platforms physically identical and does not preserve directional information; it only defines a common scalar measurement quantity for the present forecasting task.
+
+The forecasting target is future accelerometer specific-force magnitude $\qf$. Angular-speed magnitude $\qw$ is treated as an auxiliary inertial input. Reference trajectories supplied by the datasets are used for dataset auditing and contextual characterization, but they are not used as labels for $\qf$. In particular, the study does not differentiate reference position or velocity to construct ``ground-truth acceleration.'' The estimand is therefore future sensor observation, not independently referenced translational acceleration.
+
+\subsection{Forecasting formulation}
+
+After causal preprocessing to a common rate of \SI{100}{\hertz}, let $\vect{x}_k$ denote the available inertial input at sample $k$. For the two-input models,
+\begin{equation}
+\vect{x}_k=\begin{bmatrix}\qf(k) & \qw(k)\end{bmatrix}^{\top},
+\end{equation}
+whereas $\qf$-only models use the scalar history. For every prediction origin, a maximum candidate history of $L_{\max}=100$ samples is available. The neural models use the complete candidate history, whereas a Ridge model with lag $\ell$ uses the suffix $\vect{x}_{k-\ell+1:k}$, with $\ell$ chosen by source-only validation in the primary analysis. In either case, the model produces the same next $H=20$ specific-force magnitudes directly:
+\begin{equation}
+\widehat{\vect{y}}_k
+=\mathcal{M}_{\theta,\ell}\!\left(\vect{x}_{k-\ell+1:k}\right),
+\qquad
+\vect{y}_k=
+\begin{bmatrix}
+\qf(k+1) & \cdots & \qf(k+H)
+\end{bmatrix}^{\top},
+\qquad
+1\leq \ell\leq L_{\max},
+\label{eq:forecast}
+\end{equation}
+where $\ell=L_{\max}=100$ for TCN, GRU, and Transformer. At \SI{100}{\hertz}, the maximum candidate lookback is therefore \SI{1.0}{\second} and the direct forecast horizon is \SI{0.20}{\second}. Recursive rollout is not used.
+
+\subsection{Datasets and retained recordings}
+
+Two official UAV datasets are used: EuRoC MAV \cite{Burri2016EuRoC} and UZH-FPV \cite{Delmerico2019UZHFPV}. The analysis deliberately retains recordings as separate experimental units rather than pooling all windows into a single pseudo-sample. Table~\ref{tab:datasets} summarizes the retained data.
+
+\begin{table}[t]
+\centering
+\caption{Datasets and retained recordings used in the forecasting study. Reference trajectories are available in both datasets but are not used as $\qf$ labels.}
+\label{tab:datasets}
+\small
+\begin{tabular}{llll}
+\toprule
+Dataset & Retained recordings & Native IMU rate & Primary IMU source \\
+\midrule
+EuRoC MAV & 6 Vicon-room flights & $\sim$\SI{200}{\hertz} & Firefly / ADIS16448 \\
+UZH-FPV & 8 Snapdragon flights & $\sim$\SI{500}{\hertz} & Snapdragon IMU \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{sloppypar}
+The six EuRoC recordings are 
+\nolinkurl{V1_01_easy}, 
+\nolinkurl{V1_02_medium}, 
+\nolinkurl{V1_03_difficult}, 
+\nolinkurl{V2_01_easy}, 
+\nolinkurl{V2_02_medium}, and 
+\nolinkurl{V2_03_difficult}. The eight UZH-FPV recordings are 
+\nolinkurl{indoor_forward_6_snapdragon}, 
+\nolinkurl{indoor_forward_9_snapdragon}, 
+\nolinkurl{indoor_forward_10_snapdragon}, 
+\nolinkurl{indoor_45_2_snapdragon}, 
+\nolinkurl{indoor_45_4_snapdragon}, 
+\nolinkurl{indoor_45_13_snapdragon}, 
+\nolinkurl{indoor_45_14_snapdragon}, and 
+\nolinkurl{outdoor_forward_1_snapdragon}. The retained set therefore contains 14 flight recordings in total.
+\end{sloppypar}
+
+\section{Evaluation Protocol}
+\label{sec:protocol}
+
+Figure~\ref{fig:protocol} summarizes the locked evaluation pipeline from native IMU measurements to sequence-level inference. The same causal representation and prediction window are used in within-domain and cross-dataset experiments; only the fitting scope changes.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/Fig01_Protocol_Schematic.pdf}
+\caption{Frozen evaluation protocol. EuRoC and UZH-FPV measurements are converted to the common frame-invariant quantities $q_f$ and $q_\omega$, causally anti-aliased and decimated to 100~Hz, and evaluated from a common 1.0~s candidate history with a 0.20~s direct forecast. TCN, GRU, and Transformer consume all 100 history samples; Ridge selects an effective suffix length using source-only validation. Statistical fitting and model selection are source-only. Performance is then assessed either on held-out recordings from the same dataset or under frozen zero-shot transfer, with flight recordings retained as the inferential units.}
+\label{fig:protocol}
+\end{figure}
+
+\subsection{Causal preprocessing and common sampling rate}
+
+The documented nominal native rates are \SI{200}{\hertz} for EuRoC and \SI{500}{\hertz} for UZH-FPV. The Stage-1 timestamp audit measured EuRoC sequence medians at approximately \SI{200.00256}{\hertz}; the retained UZH-FPV recordings ranged from approximately \SI{500.00000}{\hertz} to \SI{500.03624}{\hertz}. Nominal documented rates are used for filter design and integer decimation because they define the intended sampling grids: factor 2 for EuRoC and factor 5 for UZH-FPV, yielding a common nominal output rate of \SI{100}{\hertz} without interpolation.
+
+Before decimation, $\qf$ and $\qw$ are passed through deterministic causal elliptic IIR anti-alias filters implemented in second-order-section (SOS) form. Separate filters are designed at \SI{200}{\hertz} and \SI{500}{\hertz} using the same locked physical specification: \SI{30}{\hertz} passband edge, \SI{45}{\hertz} stopband edge, passband ripple no greater than \SI{1}{\decibel}, and stopband attenuation of at least \SI{60}{\decibel}. The resulting EuRoC design is fifth order, whereas the UZH-FPV design is sixth order. The fifth-order EuRoC filter is stored in three SOS rows, one of which contains a first-order denominator section. Filtering uses forward-only \texttt{sosfilt}; \texttt{filtfilt}, \texttt{sosfiltfilt}, zero-phase filtering, and centred smoothing are excluded because they would introduce future information into the causal input history. The maximum pole radii are 0.94349 for the EuRoC design and 0.98501 for the UZH-FPV design, confirming stability of the locked filters.
+
+A fixed \SI{1.0}{\second} physical-time warm-up interval is discarded after filtering and decimation. This duration was chosen before forecasting because the relative impulse-response tail remaining after \SI{1.0}{\second} is approximately $4.0\times10^{-6}$ for the \SI{200}{\hertz} design and $1.54\times10^{-4}$ for the \SI{500}{\hertz} design. The same physical warm-up is therefore applied to both datasets rather than choosing a dataset-specific number of output samples.
+
+The order of operations is fixed: native-frame SI inertial channels are validated, the rotation-invariant magnitudes $\qf$ and $\qw$ are computed at native sample times, the two scalar signals are causally anti-aliased, and the filtered signals are decimated to \SI{100}{\hertz}. No gravity subtraction, target-fitted bias correction, axis rotation, interpolation, or smoothing based on future samples is applied. The resampling audit verified monotonic processed timestamps for all 14 retained recordings. Effective output rates ranged from \SI{99.99872}{\hertz} to \SI{100.00128}{\hertz} for EuRoC and from \SI{100.00000}{\hertz} to \SI{100.000095}{\hertz} for UZH-FPV. Table~\ref{tab:preprocess_audit} summarizes the locked preprocessing audit.
+
+\begin{table*}[t]
+\centering
+\caption{Locked causal preprocessing and resampling audit. Measured native rates are recording-level median timestamp rates; output-rate ranges are computed after filtering, integer decimation, and the common \SI{1.0}{\second} warm-up removal.}
+\label{tab:preprocess_audit}
+\small
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccccc}
+\toprule
+Dataset & Nominal native rate & Measured native median & Decimation & Effective output rate & IIR order & Tail after 1 s \\
+ & (Hz) & (Hz) & factor & (Hz) &  &  \\
+\midrule
+EuRoC MAV & 200 & 200.00256 & 2 & 99.99872--100.00128 & 5 & $4.01\times10^{-6}$ \\
+UZH-FPV & 500 & 500.00000--500.03624 & 5 & 100.00000--100.000095 & 6 & $1.54\times10^{-4}$ \\
+\bottomrule
+\end{tabular}%
+}
+\end{table*}
+
+For exact reproducibility, the six frozen SOS sections are reported in Table~\ref{tab:sos_coefficients}. Each row lists $(b_0,b_1,b_2,a_0,a_1,a_2)$ in the order supplied to \texttt{sosfilt}; no coefficient is estimated from target data.
+
+\begin{table*}[t]
+\centering
+\caption{Frozen second-order-section coefficients of the causal elliptic anti-alias filters. The EuRoC design is fifth order and the UZH-FPV design is sixth order.}
+\label{tab:sos_coefficients}
+\scriptsize
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llrrrrrr}
+\toprule
+Design & SOS & $b_0$ & $b_1$ & $b_2$ & $a_0$ & $a_1$ & $a_2$ \\
+\midrule
+200 Hz & 1 & 0.0091318170 & 0.0053509495 & 0.0091318170 & 1 & -0.7154723855 & 0 \\
+200 Hz & 2 & 1 & 1 & 0 & 1 & -1.2780591166 & 0.6551519191 \\
+200 Hz & 3 & 1 & -0.2390030142 & 1 & 1 & -1.1149960257 & 0.8901647331 \\
+\midrule
+500 Hz & 1 & 0.0015855759 & -0.0005872112 & 0.0015855759 & 1 & -1.7896232980 & 0.8134235596 \\
+500 Hz & 2 & 1 & -1.6050513521 & 1 & 1 & -1.8055888662 & 0.8954404554 \\
+500 Hz & 3 & 1 & -1.7425815109 & 1 & 1 & -1.8324197734 & 0.9702534672 \\
+\bottomrule
+\end{tabular}%
+}
+\end{table*}
+
+\subsection{Forecast windows and prediction origins}
+
+For every prediction origin, a common \SI{1.0}{\second} candidate history window ($L_{\max}=100$ samples) and the subsequent \SI{0.20}{\second} target horizon ($H=20$ samples) are constructed. The neural models (TCN, GRU, and Transformer) consume the full 100-sample history. Ridge is given access to the same candidate window but uses only the most recent $\ell$ samples, where $\ell\in\{10,25,50,100\}$ is selected by source-only validation together with $\alpha$. Thus, the selected source-frozen B3 Ridge uses an effective history of 25 samples (\SI{0.25}{\second}) for EuRoC and 10 samples (\SI{0.10}{\second}) for UZH-FPV; within-domain Ridge lags are selected fold-wise from the same predeclared grid. Candidate origins are spaced by \SI{0.05}{\second} (5 samples). A window is valid only when its complete 100-sample candidate history and forecast horizon lie inside one continuous recording and outside the discarded warm-up interval. Prediction origins and target samples are shared across models so that comparisons are made on identical forecast instances. Horizon-specific RMSE is computed at every direct forecast step $h=1,\ldots,20$, corresponding to 10--\SI{200}{\milli\second} at 100~Hz; 50, 100, and \SI{200}{\milli\second} (steps 5, 10, and 20) are retained as pre-specified tabular reporting checkpoints.
+
+\subsection{Within-domain and zero-shot evaluation}
+
+Within each dataset, predictive performance is estimated using leave-one-recording-out evaluation. For each held-out recording, the model and all fitted preprocessing objects are obtained from the remaining recordings only. Model selection is further separated from the held-out recording through group-aware source validation: EuRoC validation respects the two Vicon-room groups, while UZH-FPV validation respects the indoor-forward, indoor-45, and outdoor-forward trajectory groups.
+
+Cross-dataset transfer is evaluated in both directions. For EuRoC$\rightarrow$UZH, model selection, statistical normalization, parameters, and checkpoint selection use EuRoC only; the resulting source configuration is frozen before evaluation on all eligible UZH-FPV recordings. UZH$\rightarrow$EuRoC follows the symmetric rule. The term \emph{zero-shot} therefore means that no target-dataset data are used to fit parameters, hyperparameters, normalization, coordinate alignment, early stopping, or architecture choice. It does not mean that the existence or documentation of the target dataset was unknown during study design.
+
+\subsection{Normalization and fitting scope}
+
+Statistical normalization is fitted on source training recordings only. The scaler is equal-recording weighted so that long flights do not define the normalization statistics solely because they contribute more windows. For Ridge, feature scaling is fitted to source-training features. For the neural models, feature and target scaling are fitted in the source-normalized space, and all reported errors are inverse-transformed to physical units of \si{\metre\per\second\squared}. During neural optimization, a training recording is sampled approximately uniformly and a valid window is then sampled from that recording, preventing long flights from dominating solely through their larger window counts. The same frozen source scaler is applied unchanged during zero-shot target evaluation.
+
+\subsection{Benchmark models}
+
+The benchmark is intentionally compact and spans increasing temporal-model complexity.
+
+\paragraph{Persistence.}
+The no-fit baseline holds the final observed specific-force magnitude constant over the entire horizon,
+\begin{equation}
+\widehat{\qf}(k+h)=\qf(k),\qquad h=1,\ldots,H.
+\end{equation}
+
+\paragraph{Ridge regression.}
+The principal learned linear benchmark is a direct multi-output Ridge model. For a design matrix $\vect{X}$ of source-domain histories and a target matrix $\vect{Y}$ containing the 20 future $\qf$ values, the coefficient matrix is obtained from
+\begin{equation}
+\widehat{\vect{B}}
+=\arg\min_{\vect{B}}
+\left\|\vect{Y}-\vect{X}\vect{B}\right\|_F^2
++\alpha\left\|\vect{B}\right\|_F^2.
+\label{eq:ridge}
+\end{equation}
+Lag length and $\alpha$ are selected using source-only validation. The predeclared Ridge lag grid is $\ell\in\{10,25,50,100\}$ samples, so Ridge is explicitly allowed to use the same full 100-sample (\SI{1.0}{\second}) history available to the neural models; a shorter effective history is therefore a source-validation outcome rather than an imposed restriction. Two pre-specified Ridge baselines are retained: B2 uses $\qf$ history only and B3 uses $[\qf,\qw]$. Each baseline is independently tuned on the source domain and frozen before any target evaluation. Source-only validation favors B3 for both transfer sources (EuRoC: validation RMSE 0.7417 for B3 versus 0.7467 for B2; UZH-FPV: 1.9812 for B3 versus 2.0155 for B2). Accordingly, B3 is designated as the primary Ridge comparator for both zero-shot transfer directions and for the principal source-selected comparisons reported in the manuscript. B2 is retained only as a supplementary sensitivity baseline. Thus, no primary Ridge result is chosen after inspection of target-domain forecasting error. Complete B2 sensitivity results are reported in Supplementary Table S2 and are not used to define any primary comparator.
+
+\paragraph{Compact nonlinear models.}
+Three standard temporal architectures are evaluated: a causal temporal convolutional network (TCN), a gated recurrent unit (GRU), and a compact encoder-only Transformer. Each receives the same 100-sample history and predicts the 20-step $\qf$ horizon directly. At most 12 predeclared source-only configurations are considered per architecture. Neural optimization uses AdamW, batch size 64, at most 100 epochs, and patience 10 based only on source validation. Three fixed random seeds (20260912, 20260913, and 20260914) are used to assess training variability. Hyperparameter ranking uses the mean source-validation equal-sequence RMSE across the three seeds; final source fits use the median best source-validation epoch. Table~\ref{tab:frozen_configs} gives the exact source-frozen configurations used for zero-shot transfer. Fold-specific configurations used in the leave-one-recording-out within-domain analysis are preserved in the reproducibility artifacts.
+
+\begin{table}[t]
+\centering
+\caption{Exact source-frozen configurations used for zero-shot transfer. Ridge B2 and B3 are both independently source-tuned and frozen; B3 has the lower source-validation RMSE for both source datasets and is therefore the primary Ridge comparator. B2 is retained only as a supplementary sensitivity baseline. ``Epoch'' is the median best source-validation epoch used for the final source fit. WD denotes AdamW weight decay.}
+\label{tab:frozen_configs}
+\scriptsize
+\setlength{\tabcolsep}{3.2pt}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lllclcccr}
+\toprule
+Source & Model/ID & Inputs & Frozen configuration & LR & WD & Epoch & Val. RMSE & Params \\
+\midrule
+EuRoC & Ridge B2 & $\qf$ & lag 25, $\alpha=10^{-4}$ & -- & -- & -- & 0.7467 & -- \\
+EuRoC & Ridge B3 & $[\qf,\qw]$ & lag 25, $\alpha=10^{-4}$ & -- & -- & -- & 0.7417 & -- \\
+EuRoC & TCN12 & $[\qf,\qw]$ & ch. $[32,32]$, $k=5$, dil. $[1,2,4]$, GELU, dropout 0 & $10^{-3}$ & $10^{-4}$ & 23 & 0.7443 & 16,212 \\
+EuRoC & GRU07 & $[\qf,\qw]$ & hidden 64, 1 layer, dropout 0 & $10^{-3}$ & $10^{-4}$ & 49 & 0.7300 & 14,356 \\
+EuRoC & TR12 & $[\qf,\qw]$ & 1 layer, $d_{\rm model}=32$, 2 heads, FF mult. 4, mean pooling, dropout 0 & $10^{-3}$ & 0 & 66 & 0.7423 & 13,460 \\
+\addlinespace
+UZH-FPV & Ridge B2 & $\qf$ & lag 25, $\alpha=1$ & -- & -- & -- & 2.0155 & -- \\
+UZH-FPV & Ridge B3 & $[\qf,\qw]$ & lag 10, $\alpha=10^{-2}$ & -- & -- & -- & 1.9812 & -- \\
+UZH-FPV & TCN07 & $[\qf,\qw]$ & ch. $[32,32]$, $k=5$, dil. $[1,2,4,8,16]$, ReLU, dropout 0 & $10^{-3}$ & 0 & 28 & 1.9179 & 26,516 \\
+UZH-FPV & GRU07 & $[\qf,\qw]$ & hidden 64, 1 layer, dropout 0 & $10^{-3}$ & $10^{-4}$ & 27 & 1.9323 & 14,356 \\
+UZH-FPV & TR05 & $[\qf,\qw]$ & 1 layer, $d_{\rm model}=32$, 4 heads, FF mult. 4, last pooling, dropout 0.1 & $10^{-3}$ & $10^{-4}$ & 33 & 1.9079 & 13,460 \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\paragraph{Ridge history-length sensitivity.}
+The primary Ridge search treats history length as a source-selected hyperparameter over $\ell\in\{10,25,50,100\}$, so the selected B3 models use 25 samples for EuRoC and 10 samples for UZH-FPV even though the neural models consume the full 100-sample history. To assess whether the linear-versus-nonlinear comparison is materially confounded by this difference in effective memory, a \emph{post hoc} equal-history sensitivity analysis fixes B3 Ridge at $\ell=100$ samples (\SI{1.0}{\second}) in all contexts and retunes only $\alpha$ over the original predeclared grid $\{10^{-6},10^{-4},10^{-2},1,100\}$ using the same source-only validation rules. For within-domain leave-one-recording-out evaluation, $\alpha$ is chosen using only the training recordings of each fold; for transfer, $\alpha$ is chosen on the source dataset, then the scaler and Ridge model are frozen before target evaluation. No neural model is retrained and no target-domain data are used for tuning. The resulting equal-history benchmark is reported in Section~\ref{sec:ridge100_sensitivity} and Supplementary Section S5.
+
+The frozen metadata specify all source-selected architectural and optimization hyperparameters shown in Table~\ref{tab:frozen_configs}. Implementation-level constants that are not exposed in the frozen metadata (for example, the Transformer's positional-encoding implementation) must be taken directly from the released source code rather than inferred or reconstructed from the table.
+
+The causal linear-extrapolation baseline evaluated during initial screening is retained as a supplementary comparator because it was uniformly inferior to Persistence and Ridge in the frozen baseline study; it is not used as a principal model in the main results. Its frozen aggregate results are reported in Supplementary Table S2.
+
+\subsection{Performance measures and statistical unit}
+
+For sequence $s$, with valid origins $i=1,\ldots,N_s$ and horizons $h=1,\ldots,H$, the primary sequence-level metric is the multi-horizon RMSE
+\begin{equation}
+\mathrm{RMSE}_s=
+\sqrt{
+\frac{1}{N_sH}
+\sum_{i=1}^{N_s}\sum_{h=1}^{H}
+\left(\widehat{q}_{f,s,i,h}-q_{f,s,i,h}\right)^2
+}.
+\label{eq:seq_rmse}
+\end{equation}
+The primary dataset-level estimand is the equal-sequence mean of $\mathrm{RMSE}_s$, so every flight receives equal weight regardless of duration. Mean absolute error and horizon-specific RMSE are secondary metrics. Horizon-specific RMSE is computed for all 20 direct forecast steps; 50, 100, and \SI{200}{\milli\second} are the pre-specified tabular checkpoints.
+
+To quantify improvement over the no-fit short-horizon reference, a descriptive persistence-relative forecast skill is also reported:
+\begin{equation}
+\mathcal{S}_m = 100\left(1-\frac{\overline{\mathrm{RMSE}}_m}{\overline{\mathrm{RMSE}}_{\mathrm{Persistence}}}\right)\%,
+\label{eq:persistence_skill}
+\end{equation}
+where the overbar denotes the equal-sequence mean within the same evaluation context. Positive values therefore indicate lower RMSE than Persistence. This quantity is a derived descriptive summary of the primary point estimates, not a separate inferential test, and it introduces no additional model fitting or target-domain selection.
+
+Uncertainty intervals are obtained using 10,000 bootstrap resamples of flight recordings with fixed seed 20260912. The bootstrap unit is the sequence, not the overlapping forecasting window. The reported intervals therefore quantify sequence-level sampling variability rather than metrological measurement uncertainty. For the advanced-model comparison against the source-selected B3 Ridge reference described in Section~4.5, the paired quantity is
+\begin{equation}
+\Delta_s=\mathrm{RMSE}_{\mathrm{advanced},s}-\mathrm{RMSE}_{\mathrm{Ridge},s},
+\label{eq:delta}
+\end{equation}
+so negative values favor the advanced model. Exact two-sided sign-flip results are reported in Supplementary Table S3 as exploratory small-sample diagnostics rather than as the primary evidence.
+
+\subsection{Secondary high-specific-force analysis}
+
+A pre-specified secondary analysis examines performance when the forecast targets fall above the sequence-specific 95th percentile of $\qf$. The threshold is defined within each recording and is not tuned to model performance. These samples are described as \emph{high-specific-force intervals}; they are not equated with independently verified extreme maneuvers. Training data and primary model fitting are unchanged by this analysis.
+
+\subsection{Reproducibility controls}
+
+The scientific protocol was frozen before forecasting results were inspected. Source-model configurations were separately frozen before cross-dataset target evaluation, and target-leakage checks verified that no fitted object accessed the target domain during training or model selection. Final publication statistics were independently recomputed from sequence-level result files; 430 numerical reconciliation checks produced no mismatch above tolerance. The fixed-100-lag Ridge analysis was added subsequently as a post hoc robustness check of history-length fairness; it does not alter the primary estimand, the primary source-selected Ridge comparator, or any neural-model result. These controls are used to support reproducibility of the reported comparative evaluation rather than to claim preregistration.
+
+\section{Results}
+\label{sec:results}
+
+\subsection{Primary forecasting performance}
+
+Table~\ref{tab:primary_results} reports the primary equal-sequence multi-horizon RMSE. Persistence establishes a strong short-horizon baseline, with RMSE of \SI{0.917}{\metre\per\second\squared} within EuRoC and \SI{2.349}{\metre\per\second\squared} within UZH-FPV. All learned principal models improve on Persistence in all four evaluation contexts, but the ranking among learned models depends on context.
+
+Within EuRoC, the source-selected Ridge model obtains the lowest primary RMSE, \SI{0.728}{\metre\per\second\squared}, while GRU, TCN, and Transformer yield 0.732, 0.735, and \SI{0.744}{\metre\per\second\squared}, respectively. Thus, the compact nonlinear models do not materially improve the primary EuRoC result over regularized linear forecasting. Within UZH-FPV, the Transformer provides the lowest mean RMSE, \SI{1.895}{\metre\per\second\squared}, compared with \SI{1.943}{\metre\per\second\squared} for Ridge, \SI{1.920}{\metre\per\second\squared} for TCN, and \SI{1.946}{\metre\per\second\squared} for GRU.
+
+\begin{table}[t]
+\centering
+\caption{Equal-sequence mean multi-horizon RMSE of specific-force magnitude $\qf$ in \si{\metre\per\second\squared}. Brackets contain 95\% percentile intervals from 10,000 sequence-level bootstrap resamples. EuRoC uses $n=6$ recordings and UZH-FPV uses $n=8$.}
+\label{tab:primary_results}
+\small
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccc}
+\toprule
+Model & Within EuRoC & Within UZH & EuRoC$\rightarrow$UZH & UZH$\rightarrow$EuRoC \\
+\midrule
+Persistence & 0.917 [0.743, 1.069] & 2.349 [1.638, 3.053] & 2.349 [1.638, 3.053] & 0.917 [0.743, 1.069] \\
+Source-selected Ridge & \textbf{0.728} [0.583, 0.851] & 1.943 [1.378, 2.527] & 2.065 [1.484, 2.698] & 0.831 [0.703, 0.936] \\
+TCN & 0.735 [0.594, 0.854] & 1.920 [1.362, 2.506] & \textbf{2.050} [1.471, 2.690] & 0.825 [0.694, 0.932] \\
+GRU & 0.732 [0.591, 0.847] & 1.946 [1.351, 2.572] & 2.080 [1.470, 2.758] & \textbf{0.805} [0.665, 0.917] \\
+Transformer & 0.744 [0.603, 0.855] & \textbf{1.895} [1.345, 2.479] & 2.198 [1.590, 2.906] & 0.817 [0.676, 0.935] \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+The Ridge row uses the B3 configuration selected exclusively from source-domain validation. The same source-selection rule is applied in both transfer directions; B2 is retained only as a supplementary sensitivity baseline.
+
+Figure~\ref{fig:primary_rmse} visualizes the same primary estimates and sequence-bootstrap intervals, making the context-dependent ranking of the learned models explicit.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/Fig02_Primary_RMSE.pdf}
+\caption{Primary equal-sequence multi-horizon RMSE across the four evaluation contexts. Markers denote equal-sequence means and error bars denote 95\% percentile intervals from sequence-level bootstrap resampling. Lower values indicate better forecasting performance.}
+\label{fig:primary_rmse}
+\end{figure}
+
+The history-length selection audit also shows that the predeclared 100-sample Ridge candidate was available in the same source-only search that produced the primary linear comparator, but source validation selected shorter B3 histories (25 samples for EuRoC and 10 samples for UZH-FPV). The stricter fixed-100-lag comparison is reported next.
+
+\subsection{Equal-history Ridge sensitivity}
+\label{sec:ridge100_sensitivity}
+
+To isolate the effect of effective history length, B3 Ridge was re-evaluated with its lag fixed at 100 samples, matching the 1.0-s input history of TCN, GRU, and Transformer, while retaining the same leakage controls and source-only tuning of $\alpha$. Table~\ref{tab:ridge100_sensitivity} compares this post hoc equal-history benchmark with the primary source-selected-lag B3 Ridge. Fixing Ridge to 100 samples increases the aggregate equal-sequence RMSE in all four contexts: from 0.728 to 0.748 within EuRoC, 1.943 to 1.957 within UZH-FPV, 2.065 to 2.126 for EuRoC$\rightarrow$UZH, and 0.831 to 0.842 for UZH$\rightarrow$EuRoC. The corresponding increases are 0.020, 0.014, 0.060, and 0.012~\si{\metre\per\second\squared}, respectively.
+
+\begin{table*}[t]
+\centering
+\caption{Post hoc equal-history sensitivity for B3 Ridge. The sensitivity fixes the Ridge history at 100 samples (1.0~s), matching the neural-model history length, and retunes only $\alpha$ using the original source-only validation procedure. Brackets contain 95\% sequence-bootstrap intervals. $\Delta$ is fixed-100-lag RMSE minus the primary source-selected-lag Ridge RMSE; positive values indicate worse performance when Ridge is forced to use all 100 samples.}
+\label{tab:ridge100_sensitivity}
+\small
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lccc}
+\toprule
+Context & Primary source-selected B3 Ridge & Fixed 100-lag B3 Ridge & $\Delta$ \\
+\midrule
+Within EuRoC & 0.728 [0.583, 0.851] & 0.748 [0.607, 0.864] & +0.020 \\
+Within UZH-FPV & 1.943 [1.378, 2.527] & 1.957 [1.385, 2.560] & +0.014 \\
+EuRoC$\rightarrow$UZH-FPV & 2.065 [1.484, 2.698] & 2.126 [1.559, 2.749] & +0.060 \\
+UZH-FPV$\rightarrow$EuRoC & 0.831 [0.703, 0.936] & 0.842 [0.701, 0.952] & +0.012 \\
+\bottomrule
+\end{tabular}%
+}
+\end{table*}
+
+Thus, the primary comparison does not impose a shorter Ridge history by design: Ridge was allowed the same 100-sample maximum history as the neural models, but source-only validation selected a shorter effective memory that yielded lower aggregate RMSE. The equal-history constraint modestly changes some within-context rankings---for example, the fixed-100-lag Ridge is slightly worse than the compact nonlinear models within EuRoC---but it does not remove the central context dependence: no nonlinear architecture dominates all four settings, and the EuRoC-trained Transformer remains worse than Ridge under EuRoC$\rightarrow$UZH transfer. Selected 50/100/200-ms values, fold-level $\alpha$ choices, and sequence-level fixed-100-lag results are provided in the Supplementary Material and machine-readable reproducibility files.
+
+\subsection{Persistence-relative forecast skill}
+
+Because $\qf$ is frequently close to gravitational acceleration, Persistence is a particularly important reference: a task dominated only by slow variation around $g$ could otherwise appear artificially easy. Table~\ref{tab:persistence_skill} reports the descriptive skill defined in Eq.~\eqref{eq:persistence_skill}, computed directly from the equal-sequence mean RMSE values in Table~\ref{tab:primary_results}. All learned principal models have positive skill in every evaluation context.
+
+The best learned method reduces RMSE relative to Persistence by 20.6\% within EuRoC (Ridge), 19.3\% within UZH-FPV (Transformer), 12.7\% for EuRoC$\rightarrow$UZH (TCN), and 12.2\% for UZH$\rightarrow$EuRoC (GRU). Even the EuRoC-trained Transformer, which shows the largest learned-model transfer degradation, retains 6.4\% skill over Persistence on the UZH target. These results indicate that the forecasting task contains short-horizon temporal structure beyond simply holding the most recent $\qf$ observation constant. They do not remove the physical limitation that the scalar target remains gravity-dominated and direction-free.
+
+\begin{table}[t]
+\centering
+\caption{Descriptive persistence-relative forecast skill $\mathcal{S}_m$ (\%), computed from the equal-sequence mean RMSE values in Table~\ref{tab:primary_results} using Eq.~\eqref{eq:persistence_skill}. Positive values indicate lower RMSE than Persistence. These are derived point-estimate summaries, not additional inferential tests.}
+\label{tab:persistence_skill}
+\small
+\begin{tabular}{lrrrr}
+\toprule
+Context & Ridge & TCN & GRU & Transformer \\
+\midrule
+Within EuRoC & \textbf{20.6} & 19.8 & 20.2 & 18.9 \\
+Within UZH-FPV & 17.3 & 18.3 & 17.2 & \textbf{19.3} \\
+EuRoC$\rightarrow$UZH & 12.1 & \textbf{12.7} & 11.5 & 6.4 \\
+UZH$\rightarrow$EuRoC & 9.4 & 10.0 & \textbf{12.2} & 10.9 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Zero-shot cross-dataset transfer}
+
+The two transfer directions show that within-domain ranking is not a reliable proxy for cross-platform performance. In EuRoC$\rightarrow$UZH transfer, TCN gives the lowest mean RMSE among the evaluated learned models at \SI{2.050}{\metre\per\second\squared}, only slightly below Ridge at \SI{2.065}{\metre\per\second\squared}. GRU reaches \SI{2.080}{\metre\per\second\squared}. By contrast, the Transformer that performs best within UZH degrades to \SI{2.198}{\metre\per\second\squared}, worse than both Ridge and the other compact nonlinear models.
+
+For UZH$\rightarrow$EuRoC, GRU is best at \SI{0.805}{\metre\per\second\squared}, compared with \SI{0.831}{\metre\per\second\squared} for the source-selected Ridge comparator, \SI{0.825}{\metre\per\second\squared} for TCN, and \SI{0.817}{\metre\per\second\squared} for Transformer. The source-selected Ridge transfer gap in this direction is approximately 0.103~\si{\metre\per\second\squared}, or 14.1\% relative to the within-EuRoC Ridge result. The descriptive transfer gap is positive for every learned model: depending on model and direction, zero-shot target RMSE exceeds the corresponding within-target result by about 6.3--16.0\%. The largest observed gap is for the Transformer in EuRoC$\rightarrow$UZH (\SI{0.302}{\metre\per\second\squared}, 16.0\%). Figure~\ref{fig:transfer_gap} shows this asymmetry directly.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.88\textwidth]{figures/Fig03_Transfer_Gap.pdf}
+\caption{Descriptive zero-shot transfer gap for the learned models, defined as target zero-shot RMSE minus the corresponding within-target RMSE and expressed as a percentage of within-target RMSE. The Ridge bars use the source-selected B3 comparator in both directions. Persistence is omitted because it has no fitted source-domain model and therefore does not have an analogous learned-model transfer gap.}
+\label{fig:transfer_gap}
+\end{figure}
+
+\subsection{Horizon dependence}
+
+Table~\ref{tab:horizon_results} summarizes the pre-specified 50-, 100-, and \SI{200}{\milli\second} checkpoints, while Fig.~\ref{fig:horizon_rmse} reports the complete 20-step profile from 10 to \SI{200}{\milli\second}. The full curves show a broadly increasing error envelope with local non-monotonicity and horizon-dependent rank changes. Ridge is strongest at the very shortest horizons in both within-dataset evaluations; beyond the earliest horizons, the nonlinear models become more competitive. Within EuRoC, GRU is lowest at most horizons from 30~ms onward. Within UZH-FPV, Transformer or GRU is lowest over most horizons beyond 20~ms. Under EuRoC$\rightarrow$UZH transfer, Ridge leads the earliest horizons but GRU becomes lowest from approximately 70~ms onward; under UZH$\rightarrow$EuRoC, GRU is lowest at most horizons, with small local reversals. These per-horizon rankings are descriptive and are not interpreted as 20 independent hypothesis tests.
+
+\begin{table}[t]
+\centering
+\caption{Equal-sequence RMSE at selected forecast horizons, in \si{\metre\per\second\squared}.}
+\label{tab:horizon_results}
+\small
+\begin{tabular}{llccc}
+\toprule
+Context & Model & 50 ms & 100 ms & 200 ms \\
+\midrule
+Within EuRoC & Persistence & 0.751 & 0.911 & 1.078 \\
+ & Ridge & 0.643 & 0.753 & 0.817 \\
+ & TCN & 0.641 & 0.735 & 0.815 \\
+ & GRU & \textbf{0.625} & \textbf{0.721} & \textbf{0.812} \\
+ & Transformer & 0.646 & 0.731 & 0.818 \\
+\addlinespace
+Within UZH & Persistence & 2.038 & 2.514 & 2.655 \\
+ & Ridge & 1.833 & 2.095 & 2.149 \\
+ & TCN & 1.823 & 2.027 & 2.111 \\
+ & GRU & 1.838 & \textbf{2.011} & 2.125 \\
+ & Transformer & \textbf{1.784} & 2.015 & \textbf{2.108} \\
+\addlinespace
+EuRoC$\rightarrow$UZH & Persistence & 2.038 & 2.514 & 2.655 \\
+ & Ridge & \textbf{1.844} & 2.205 & 2.370 \\
+ & TCN & 1.945 & 2.128 & 2.291 \\
+ & GRU & 1.960 & \textbf{2.093} & \textbf{2.268} \\
+ & Transformer & 2.054 & 2.173 & 2.390 \\
+\addlinespace
+UZH$\rightarrow$EuRoC & Persistence & 0.751 & 0.911 & 1.078 \\
+ & Ridge & 0.697 & 0.835 & 0.920 \\
+ & TCN & 0.695 & 0.812 & \textbf{0.883} \\
+ & GRU & \textbf{0.693} & \textbf{0.798} & 0.897 \\
+ & Transformer & 0.707 & 0.811 & 0.902 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The complete horizon profiles in Fig.~\ref{fig:horizon_rmse} therefore complement the selected checkpoints in Table~\ref{tab:horizon_results} and make explicit that model ordering can change across the direct 10--200-ms forecast range even when the aggregate multi-horizon ranking is unchanged.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth,draft=false]{figures/Fig04_Horizon_RMSE_R8.pdf}
+\caption{Equal-sequence RMSE across all 20 direct forecast steps, corresponding to 10--200~ms at 100~Hz. The four panels show within-EuRoC, within-UZH-FPV, EuRoC$\rightarrow$UZH-FPV, and UZH-FPV$\rightarrow$EuRoC evaluation. Lines connect per-horizon equal-sequence means; the 50-, 100-, and 200-ms checkpoints are tabulated in Table~\ref{tab:horizon_results}. The Ridge curve uses the source-selected B3 comparator in both transfer directions. The per-horizon curves are descriptive diagnostics of horizon dependence, not 20 independent hypothesis tests.}
+\label{fig:horizon_rmse}
+\end{figure}
+\FloatBarrier
+
+\subsection{Paired comparison with Ridge}
+
+Because sequence is the inferential unit, the advanced models are compared with the source-selected Ridge reference using paired per-sequence RMSE differences defined by Eq.~\eqref{eq:delta}. The clearest within-domain advanced-model gain occurs for the Transformer on UZH-FPV: the mean paired difference is approximately $-0.048$~\si{\metre\per\second\squared}, seven of eight sequences favor the Transformer, and the 95\% paired bootstrap interval lies below zero. In EuRoC, by contrast, all three advanced models have mean paired differences close to zero or slightly positive relative to Ridge, so the data do not support a meaningful nonlinear gain there.
+
+The strongest adverse transfer result is also associated with the Transformer. For EuRoC$\rightarrow$UZH, its mean paired difference relative to Ridge is approximately $+0.132$~\si{\metre\per\second\squared}, with seven of eight target sequences favoring Ridge and the paired interval lying above zero. TCN remains near Ridge in this direction (mean difference about $-0.015$~\si{\metre\per\second\squared}). In UZH$\rightarrow$EuRoC, the source-selected comparator changes the paired interpretation: TCN remains essentially tied with Ridge (mean $\Delta=-0.005$~\si{\metre\per\second\squared}; 95\% paired bootstrap interval $[-0.018,0.004]$), whereas GRU shows the clearest reverse-direction improvement (mean $\Delta=-0.026$~\si{\metre\per\second\squared}; five of six sequences favor GRU; interval $[-0.038,-0.013]$). Transformer is also lower on average (mean $\Delta=-0.014$~\si{\metre\per\second\squared}; interval $[-0.026,-0.0001]$), but the small number of independent flights warrants cautious interpretation. Overall, no advanced architecture dominates the four evaluation contexts. Figure~\ref{fig:paired_delta} shows every flight-level paired difference together with the mean and 95\% sequence-bootstrap interval, so the small independent sample sizes and between-flight heterogeneity remain visible rather than being hidden by summary error bars alone.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth,draft=false]{figures/Fig05_Advanced_vs_Ridge_R8.pdf}
+\caption{Paired flight-level RMSE differences between each advanced model and the source-selected Ridge comparator. $\Delta=\mathrm{RMSE}_{\mathrm{advanced}}-\mathrm{RMSE}_{\mathrm{Ridge}}$; negative values favor the advanced model. Circles show the paired difference for every independent flight recording; diamonds and error bars show the equal-flight mean and its 95\% paired sequence-bootstrap interval. EuRoC panels contain $n=6$ flights and UZH-FPV panels contain $n=8$ flights. Panel-specific vertical scales are used so that the flight-level spread is visible in each context.}
+\label{fig:paired_delta}
+\end{figure}
+\FloatBarrier
+
+\subsection{High-specific-force intervals}
+
+Forecasting is substantially harder in the pre-specified high-specific-force regime. For EuRoC, high-$\qf$ RMSE is about \SI{1.87}{\metre\per\second\squared} for all principal models, corresponding to roughly 2.0--2.6 times their all-target RMSE. Within UZH, Ridge, TCN, GRU, and Transformer obtain high-$\qf$ RMSE values of 7.088, 6.926, 7.342, and \SI{7.053}{\metre\per\second\squared}, respectively. These values are about 3.6--3.8 times their corresponding all-target errors. The same difficulty persists under EuRoC$\rightarrow$UZH transfer, for which high-$\qf$ RMSE remains about 7.7--\SI{8.2}{\metre\per\second\squared} for the learned models. These results are secondary because the high-$\qf$ subset is sparse by construction and is not an independently labelled maneuver class.
+
+
+\subsection{Auxiliary angular-speed input and computational footprint}
+
+The auxiliary angular-speed magnitude provides only a modest source-validation benefit. For the selected EuRoC GRU, validation RMSE changes from approximately 0.731 with $\qf$ alone to 0.730 with $[\qf,\qw]$; for the selected UZH Transformer, the corresponding change is 1.920 to 1.908. The results therefore do not support a claim of a large sensor-fusion gain from $\qw$.
+
+The selected nonlinear models are compact. Depending on source dataset, TCN uses 16,212--26,516 trainable parameters, GRU 14,356, and Transformer 13,460. On the reported CPU environment, median inference time per prediction window is below \SI{0.22}{\milli\second} for all selected models. These timings characterize computational footprint only; they are not evidence of onboard real-time flight suitability.
+
+\subsection{Gravity-proximity characterization}
+
+The frame-invariant target is physically interpretable but, as expected for an accelerometer magnitude, it is often close to gravitational acceleration. Across recordings, the median of the sequence-mean $\qf$ values is approximately \SI{9.85}{\metre\per\second\squared} for EuRoC and \SI{9.49}{\metre\per\second\squared} for UZH-FPV. On average, 96.8\% of EuRoC samples and 87.3\% of UZH-FPV samples lie within $9.81\pm2$~\si{\metre\per\second\squared}. Nevertheless, the signal is not constant: UZH-FPV exhibits broader dynamic excursions, with sequence-specific upper quantiles extending well beyond \SI{13}{\metre\per\second\squared}, and the high-$\qf$ analysis shows a marked increase in forecasting error. The persistence-relative analysis provides an additional check against triviality: the best learned method lowers equal-sequence RMSE by 12.2--20.6\% relative to a last-value hold across the four contexts. The primary task should therefore be interpreted as forecasting a gravity-dominated but dynamically varying inertial magnitude with nontrivial short-horizon predictability, rather than estimating an independently referenced translational acceleration.
+
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{Model complexity does not guarantee cross-platform generalization}
+
+The central empirical result is that increasing temporal-model complexity does not produce a monotonic improvement in forecasting accuracy across evaluation contexts. Within EuRoC, the regularized linear Ridge model attains the lowest primary RMSE, and the TCN, GRU, and Transformer remain within a narrow error band around it. Within UZH-FPV, the Transformer provides a clearer gain, reducing the equal-sequence RMSE from \SI{1.943}{\metre\per\second\squared} for Ridge to \SI{1.895}{\metre\per\second\squared}. The paired analysis strengthens this within-domain observation because seven of eight UZH recordings favor the Transformer and the corresponding paired bootstrap interval lies below zero.
+
+That gain, however, does not survive transfer from EuRoC to UZH-FPV. In the EuRoC$\rightarrow$UZH direction, the same architectural family yields \SI{2.198}{\metre\per\second\squared}, compared with \SI{2.065}{\metre\per\second\squared} for Ridge and \SI{2.050}{\metre\per\second\squared} for TCN. Conversely, UZH$\rightarrow$EuRoC gives the lowest mean error to GRU (0.805 versus 0.831~\si{\metre\per\second\squared} for source-selected Ridge), with a mean paired difference of about $-0.026$~\si{\metre\per\second\squared}. The paired sequence-bootstrap interval lies below zero, although the conclusion remains limited by only six independent EuRoC target flights. Thus, within-domain ranking is not a reliable proxy for cross-platform robustness.
+
+The fixed-100-lag sensitivity qualifies the interpretation of the primary Ridge comparison. When Ridge is forced to use the same 100-sample history as the neural models, its aggregate RMSE increases in every context, and the within-EuRoC ranking shifts slightly in favor of the compact nonlinear models. This shows that part of Ridge's competitiveness comes from source-validating its effective memory length, which is a legitimate hyperparameter-selection advantage rather than an intrinsic consequence of linearity alone. Importantly, the sensitivity does not make any single nonlinear architecture uniformly best across domains: the Transformer still degrades under EuRoC$\rightarrow$UZH, and cross-platform ranking remains context dependent.
+
+This observation is consistent with the broader time-series literature, where increasingly elaborate architectures do not uniformly outperform well-regularized linear references across datasets and forecasting regimes \cite{Zeng2023Transformers,Qiu2024TFB}. The present study extends that caution to short-horizon UAV inertial forecasting under a deliberately frozen source-to-target protocol. The practical implication is not that nonlinear sequence models are unnecessary, but that their value should be judged jointly by in-domain performance, cross-domain stability, and the cost of model selection rather than by a single within-dataset score.
+
+\subsection{Interpretation of the frame-invariant measurement representation}
+
+The use of $\qf=\|\vect{f}\|_2$ and $\qw=\|\vect{\omega}\|_2$ addresses a specific measurement-comparability problem: the retained EuRoC and UZH-FPV IMU vectors could not both be mapped to a common body-axis convention using equally justified official metadata. A learned or target-fitted alignment would have conflicted with the intended zero-shot protocol. Using Euclidean magnitudes avoids that fitted alignment because the scalar value is invariant to a fixed proper orthonormal sensor rotation.
+
+This design should not be interpreted as making the two platforms fully equivalent. Frame invariance removes one source of representation mismatch, but sensor hardware, bandwidth, noise characteristics, vehicle dynamics, flight regimes, and operating environments still differ. It also removes directional information. In this sense, the present representation is intentionally narrower than equivariant or canonical-frame inertial methods such as EqNIO and multi-platform representation-learning approaches such as Tartan IMU \cite{Jayanth2025EqNIO,Zhao2025TartanIMU}. Those methods seek richer cross-frame representations for navigation tasks, whereas the present work defines a scalar physical quantity that can be compared without data-driven axis registration.
+
+The resulting forecast target is therefore best viewed as a controlled measurement quantity for testing generalization, not as a replacement for vector-valued state estimation. This distinction is particularly important because the dataset reference trajectories are not used as $\qf$ labels and no reference acceleration is constructed by differentiating position or velocity.
+
+The persistence-relative skill analysis is important in this interpretation. Because a magnitude signal near $g$ can be highly autocorrelated over short horizons, absolute RMSE alone could overstate task difficulty. Every learned principal model nevertheless achieves positive skill relative to the last-value Persistence baseline in every context, and the best method in each context reduces RMSE by 12.2--20.6\%. This supports the narrower conclusion that the retained scalar telemetry contains learnable short-horizon temporal structure; it does not establish that magnitude forecasting preserves all dynamically relevant information or that the forecasts are sufficient for downstream control.
+
+\subsection{Transfer asymmetry and domain dependence}
+
+The two transfer directions are not symmetric. EuRoC-trained models are applied to the more dynamically varied UZH-FPV target recordings, whereas UZH-trained models are evaluated on the comparatively less variable EuRoC target. The observed transfer gaps are positive for all learned models, ranging from approximately 6.3\% to 16.0\% relative to the corresponding within-target errors. The largest gap occurs for the Transformer in EuRoC$\rightarrow$UZH. This pattern is compatible with a domain-shift interpretation, but the present experiments do not isolate a single causal source of the shift. Differences in platform dynamics, sensor hardware, trajectory distributions, and signal amplitude statistics are all plausible contributors.
+
+For that reason, the transfer results are reported direction by direction rather than pooled into a single aggregate. Pooling would obscure both the unequal target difficulty and the model-specific asymmetry. The results also illustrate why source-only model selection is important: a configuration that appears preferable within one source domain may not retain that ranking after transfer, and selecting a model after inspecting the target domain would confound evaluation with adaptation.
+
+\subsection{High-specific-force intervals and auxiliary angular speed}
+
+The pre-specified high-$\qf$ analysis provides a complementary view of task difficulty. Errors increase by roughly a factor of two to three within EuRoC and by about 3.6--3.8 for the learned models within UZH-FPV. Under EuRoC$\rightarrow$UZH transfer, the learned models remain in the range of approximately 7.7--\SI{8.2}{\metre\per\second\squared} on the high-$\qf$ subset. These values suggest that average short-horizon performance can understate error during dynamically larger specific-force excursions. Because the subset is defined only by a sequence-specific percentile threshold, however, it should not be equated with a verified maneuver class or with flight-safety limits.
+
+The auxiliary angular-speed magnitude contributes only modestly. The selected EuRoC GRU changes from about 0.731 to 0.730 in source-validation RMSE when $\qw$ is added, and the selected UZH Transformer changes from about 1.920 to 1.908. The evidence therefore supports describing $\qw$ as an auxiliary cue rather than claiming a major sensor-fusion benefit. This modest effect is also consistent with the deliberately compact two-channel representation: the experiment is designed to test cross-platform forecasting under controlled inputs, not to exploit the full information available from multiaxis inertial or exteroceptive sensing.
+
+\subsection{Implications for measurement-oriented benchmarking}
+
+Several aspects of the protocol are as important to interpretation as the model architectures. First, causal filtering is used throughout so that future samples do not enter the input history through zero-phase preprocessing. Second, statistical normalization, hyperparameter selection, checkpoint selection, and model fitting are restricted to source recordings in every zero-shot experiment. Third, the flight recording rather than the overlapping window is retained as the inferential unit. Finally, uncertainty intervals are produced by resampling recordings, not windows. These choices follow the broader reproducibility principle that evaluation procedures should not unintentionally reuse test information or inflate the effective sample size \cite{Varma2006CVBias,Benoit2025Reproducibility}.
+
+The main conclusion should therefore be read as a statement about comparative forecasting under a fixed evaluation protocol: compact nonlinear temporal models can improve performance in particular domains, but those improvements are not uniformly preserved under cross-platform zero-shot transfer. Ridge remains a strong reference precisely because it exposes whether additional temporal complexity provides a transferable gain rather than only an in-domain one.
+
+\section{Limitations and Validity}
+\label{sec:limitations}
+
+The results should be interpreted in light of several limitations. First, the number of independent recordings is small: six EuRoC and eight UZH-FPV flights. Although thousands of forecasting windows are available, those windows are strongly dependent and are not treated as independent experimental units. The resulting sequence-level confidence intervals are consequently wide, and majority counts such as seven of eight should not be interpreted as high-powered evidence of universal superiority.
+
+Second, the study uses only two public UAV datasets and two physical sensing platforms. Their heterogeneity is useful for transfer evaluation, but it does not establish a general law for all UAVs, IMUs, or flight regimes. Additional platforms, mounting configurations, sensor grades, and operating environments would be required to establish broader external validity.
+
+Third, the scalar magnitude target deliberately discards direction. This resolves the specific cross-dataset axis-alignment problem addressed here, but it prevents conclusions about three-axis body-frame forecasting, directional disturbance estimation, or component-wise inertial dynamics. The approach is therefore complementary to, rather than a replacement for, methods that explicitly learn or exploit equivariant vector representations.
+
+Fourth, the target is a future IMU observation. It is not an independently measured translational acceleration truth, and the reference trajectories supplied with EuRoC and UZH-FPV are not differentiated to construct such a label. Accordingly, prediction error quantifies telemetry forecasting performance, not physical acceleration-estimation error. This distinction also motivates the use of the term \emph{specific force} throughout the manuscript.
+
+Fifth, $\qf$ is often close to gravitational acceleration. The descriptive characterization shows that a large fraction of samples lie within $9.81\pm2$~\si{\metre\per\second\squared}, particularly in EuRoC. The signal nevertheless contains dynamic excursions and nontrivial forecast error, especially in UZH-FPV and in the high-$\qf$ subset. The positive persistence-relative skill of all learned models, with the best contextual improvements ranging from 12.2\% to 20.6\%, shows that the task is not reducible to a last-value hold. Even so, the present task should not be generalized to arbitrary inertial prediction problems without considering how much useful variation remains after converting a three-axis signal to its magnitude.
+
+Sixth, the reported computational measurements are CPU-side software timings only. Sub-millisecond median inference per prediction window indicates a modest computational footprint, but it is not evidence of real-time onboard suitability because no embedded processor, scheduling environment, sensor interface, control loop, or flight deployment is evaluated.
+
+Seventh, the target datasets were audited before modelling. The term \emph{zero-shot} is therefore restricted to the absence of target-domain fitting, normalization, alignment, early stopping, or model selection. It does not imply that the target datasets were unknown to the researchers during study design, nor is the study described as preregistered.
+
+Finally, the bootstrap intervals reported here quantify variability across the available flight recordings. They are not a metrological uncertainty budget and should not be interpreted as formal measurement uncertainty in the GUM sense. The distinction between model error, sampling variability, and measurement uncertainty is important in machine-learning-assisted measurement studies \cite{Huber2025ModelError}.
+
+\section{Reproducibility}
+\label{sec:reproducibility}
+
+The computational study was organized around a sequence of frozen audit and modelling stages. Dataset provenance, units, timestamps, frames, and usable recordings were established before model training. The physical representation, causal resampling procedure, lookback, forecast horizon, evaluation stride, sequence-level inferential unit, normalization scope, and transfer rules were then locked before forecasting results were inspected. Source-domain model configurations were frozen separately before any cross-dataset target evaluation.
+
+All zero-shot experiments enforce the same fitting rule: statistical scalers, model parameters, hyperparameters, early-stopping decisions, and architecture choices are obtained exclusively from source-domain recordings. The frozen source objects are applied unchanged to the target dataset. Automated leakage checks verified that no target-domain fitted object entered the reported transfer experiments. For Ridge, B3 is selected by source-domain validation in both source datasets and is used unchanged as the primary comparator in both zero-shot transfer directions. The B2 alternative is retained only as a supplementary sensitivity result; no primary Ridge comparator is selected after observing target-domain performance.
+
+For the advanced models, three fixed training seeds (20260912, 20260913, and 20260914) quantify optimization variability without treating seed replicates as additional experimental units. Sequence-level confidence intervals use 10,000 bootstrap resamples with fixed seed 20260912. Final publication statistics were independently reconstructed from sequence-level result files, producing 430 numerical reconciliation checks with no mismatch above the locked tolerance. The final protocol and result artifacts are protected by SHA-256 hashes so that changes after evaluation can be detected.
+
+AI-assisted programming support was used during implementation and debugging through the Cursor AI coding environment (Anysphere). Its role was limited to supporting code development; all suggested code was reviewed by the authors, executed against the frozen tests, and subjected to the numerical reconciliation checks described above. The AI coding environment did not autonomously determine the scientific protocol, target-domain model choices, statistical estimands, or interpretation of results. Software-environment and coding-tool metadata are to be archived with the public code release.
+
+The accompanying Supplementary Material exposes the compact numerical audit underlying the main figures and tables: flight-level primary RMSE values (Tables S1a--S1d), the linear-extrapolation and B2/B3 Ridge sensitivity results (Table S2), paired bootstrap summaries and exact sign-flip diagnostics (Table S3), the per-recording resampling audit (Table S4), frozen source-model selection metadata and the post hoc fixed-100-lag Ridge equal-history sensitivity (Section S5), and the principal artifact hashes (Table S6). Machine-readable CSV versions of the fixed-100-lag summary, source-selection records, and sequence-level results accompany the supplement. No target-domain data are used to tune the equal-history sensitivity.
+
+The final code release should additionally include the causal preprocessing implementation, processed-data manifests, source-only split definitions, the complete predeclared Stage-3 candidate grid, model configurations, random seeds, statistical aggregation scripts, and the hashes associated with the locked protocol and publication results. Public release of these materials, together with the official EuRoC and UZH-FPV source references, is intended to make the reported comparison independently reproducible without redistributing third-party raw data.
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+This study presented a frame-invariant protocol for short-horizon forecasting of UAV inertial telemetry across two heterogeneous public datasets. By using accelerometer specific-force magnitude as the primary target, the comparison avoids fitting an unsupported cross-dataset axis alignment while retaining a common physical unit. The evaluation further separates source-only fitting from zero-shot target testing, uses causal preprocessing, and treats flight recordings rather than overlapping windows as the independent units of comparison.
+
+The results show that additional temporal-model complexity does not translate into uniformly better cross-platform generalization. At the same time, the best learned method in each context reduces RMSE relative to Persistence by 12.2--20.6\%, confirming nontrivial short-horizon predictability despite the gravity-dominated scalar target. A post hoc equal-history check in which Ridge is forced to use the same 100-sample history as the neural models increases Ridge RMSE in all four contexts; this modestly favors nonlinear models but does not yield a single architecture that dominates across domains. Ridge is the strongest primary model within EuRoC and remains competitive in both transfer directions. The Transformer provides the clearest within-domain nonlinear gain on UZH-FPV, but that gain reverses under EuRoC$\rightarrow$UZH transfer. GRU is best in the reverse transfer direction at 0.805 versus 0.831~\si{\metre\per\second\squared} for source-selected Ridge; the paired sequence-bootstrap interval favors GRU, although the small target-flight count limits the strength of inference. No architecture therefore dominates all evaluation contexts.
+
+The broader implication is that model selection for learning-assisted inertial signal processing should consider cross-domain stability in addition to within-dataset accuracy. For the present task, compact nonlinear models offer domain-specific benefits, whereas a regularized linear benchmark provides a strong and transferable reference. Future work should extend the protocol to additional UAV platforms, investigate vector-preserving frame-aware representations, and evaluate whether probabilistic forecasts or deployment-level constraints alter the observed complexity--generalization trade-off.
+
+\section*{Funding}
+This research did not receive any specific grant from funding agencies in the public, commercial, or not-for-profit sectors.
+
+\section*{Declaration of competing interest}
+The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.
+
+\section*{Data availability}
+The raw data used in this study are publicly available from the official EuRoC MAV and UZH-FPV dataset sources cited in Refs.~\cite{Burri2016EuRoC,Delmerico2019UZHFPV}. The accompanying Supplementary Material provides flight-level results, baseline-sensitivity tables, paired small-sample diagnostics, resampling audits, frozen selection metadata, and machine-readable CSV files. The analysis code and complete processed-result artifact set will be deposited in a permanent public repository; access can be provided to editors and reviewers during peer review. Third-party raw datasets are not redistributed.
+
+\section*{CRediT authorship contribution statement}
+\textbf{Pradip Diwan Borase:} Methodology, Software, Validation, Formal analysis, Investigation, Data curation, Visualization, Project administration, Writing -- original draft, Writing -- review \& editing. \textbf{Vijyant Agarwal:} Conceptualization, Supervision.
+
+\section*{Declaration of generative AI and AI-assisted technologies in the manuscript preparation process}
+During the preparation of this work, the authors used OpenAI ChatGPT to support literature-search organization, manuscript structuring, language refinement, and editorial checking, and Cursor AI (Anysphere) to support code implementation and debugging. After using these tools, the authors reviewed and edited the content as needed, independently verified the cited sources, code execution, numerical results, and scientific interpretations, and take full responsibility for the content of the publication.
+
+% SUBMISSION CHECK: replace the prospective repository wording in Data availability with the permanent DOI/URL once the archive is created.
+
+\bibliographystyle{elsarticle-num}
+\bibliography{references}
+
+\end{document}

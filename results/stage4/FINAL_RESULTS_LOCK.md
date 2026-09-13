@@ -1,0 +1,21 @@
+# FINAL RESULTS LOCK
+utc: 2026-09-13T03:39:06Z
+After this file is hashed, experimental numbers must not be edited during manuscript drafting unless a verified error is documented.
+
+primary table sha256: 4bdc774438dfce59bbc968fd27f87bca16dc1f5343f972b64b20b0f5c2ef0d6f
+advanced-vs-Ridge sha256: a12dd9a468d7a5523d401bf7ed693de5b2af9595a9a0a9f6e6e1ec1d107b2198
+horizon-data sha256: 78612611ed687e6a58a5bc7ba2919bab1ffb534a2a78916349d1049291a492e4
+high-q_f-data sha256: 982da8e6f6fdb2c85e08878a43d90618fb5e0f26cbd74a61c28e50e3eddb787e
+transfer-gap sha256: 6b82386e62df688f0ce4feeb2f27de0436793360b272a8d4f7f6921d94b5c7ae
+computational-footprint sha256: d47eb6010dbcef12a7697a0e4cc78bdb33bc8a8ec3820e1fc81ba968c412a42d
+claim-evidence matrix sha256: 3cfd01ffa87015cc4deee663526195350bee58ebfaf620652638f2c2a907bf0b
+FIG2 data sha256: c14baba6486ff095bb655790ace36d61595e2db0ca30ddb65a18c5c5be04f46d
+FIG3 data sha256: 78612611ed687e6a58a5bc7ba2919bab1ffb534a2a78916349d1049291a492e4
+FIG4 data sha256: f6fcd21f3a86384683c13252c043899a0d6d675512634e12da69e0e90e083b9c
+FIG5 data sha256: bf81a74c3f0b4c82946546f7e2b153fd15d040b0d379b29678f08938f739981d
+FIG6 data sha256: 02a0c3bd5b861516c6b2dfeb5c275a3f74140b024b66e7470a94b99de3274bf0
+
+n_target_fitted_objects: 0
+numerical_reconciliation: PASS
+EuRoC sequences: 6
+UZH sequences: 8

@@ -1,0 +1,6 @@
+utc=2026-09-12T17:35:07Z
+PROTOCOL_LOCK.md sha256=b90e67caf7e44264ce02a3a2b6a9b9cd1925719b5201d0e77f1aafd4501defed
+configs/protocol_lock.yaml sha256=8fd75b59e35aac291f597fb856ff1debfc9609cf7a52adf6fc0e3502bf3c0d7d
+terminology=PRE-SPECIFIED_LOCKED_PROTOCOL (not an OSF/Zenodo registration)
+git_commit=25bcdfd1f16c41543b2662e66fc58c3341d5c222
+git_commit_note=Recorded after SHA-256 of PROTOCOL_LOCK.md and configs/protocol_lock.yaml; those file hashes are unchanged.

@@ -1,0 +1,38 @@
+item,required,present,status,notes
+Fig01_Protocol_Schematic.pdf,yes,yes,PASS,vector or 300 dpi preview
+Fig01_Protocol_Schematic.svg,yes,yes,PASS,vector or 300 dpi preview
+Fig01_Protocol_Schematic.png,yes,yes,PASS,vector or 300 dpi preview
+Fig02_Primary_RMSE.pdf,yes,yes,PASS,vector or 300 dpi preview
+Fig02_Primary_RMSE.svg,yes,yes,PASS,vector or 300 dpi preview
+Fig02_Primary_RMSE.png,yes,yes,PASS,vector or 300 dpi preview
+Fig03_Horizon_RMSE.pdf,yes,yes,PASS,vector or 300 dpi preview
+Fig03_Horizon_RMSE.svg,yes,yes,PASS,vector or 300 dpi preview
+Fig03_Horizon_RMSE.png,yes,yes,PASS,vector or 300 dpi preview
+Fig04_Advanced_vs_Ridge.pdf,yes,yes,PASS,vector or 300 dpi preview
+Fig04_Advanced_vs_Ridge.svg,yes,yes,PASS,vector or 300 dpi preview
+Fig04_Advanced_vs_Ridge.png,yes,yes,PASS,vector or 300 dpi preview
+Fig05_Transfer_Gap.pdf,yes,yes,PASS,vector or 300 dpi preview
+Fig05_Transfer_Gap.svg,yes,yes,PASS,vector or 300 dpi preview
+Fig05_Transfer_Gap.png,yes,yes,PASS,vector or 300 dpi preview
+Fig06_High_qf.pdf,yes,yes,PASS,vector or 300 dpi preview
+Fig06_High_qf.svg,yes,yes,PASS,vector or 300 dpi preview
+Fig06_High_qf.png,yes,yes,PASS,vector or 300 dpi preview
+figure source script,yes,yes,PASS,editable matplotlib source
+FIG2 data,yes,yes,PASS,
+FIG3 data,yes,yes,PASS,
+FIG4 data,yes,yes,PASS,
+FIG5 data,yes,yes,PASS,
+FIG6 data,yes,yes,PASS,
+Table01_Datasets.csv,yes,yes,PASS,
+Table01_Datasets.md,yes,yes,PASS,
+Table02_Protocol.csv,yes,yes,PASS,
+Table02_Protocol.md,yes,yes,PASS,
+Table03_Primary_Results.csv,yes,yes,PASS,
+Table03_Primary_Results.md,yes,yes,PASS,
+Table04_Advanced_vs_Ridge.csv,yes,yes,PASS,
+Table04_Advanced_vs_Ridge.md,yes,yes,PASS,
+Table05_Computational_Footprint.csv,yes,yes,PASS,
+Table05_Computational_Footprint.md,yes,yes,PASS,
+STAGE4_REPORT,yes,yes,PASS,
+FINAL_RESULTS_LOCK,yes,yes,PASS,
+lock hash,yes,yes,PASS,

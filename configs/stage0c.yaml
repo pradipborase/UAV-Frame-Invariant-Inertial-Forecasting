@@ -1,0 +1,64 @@
+# Stage 0C scientific / storage configuration.
+# Additional EuRoC budget is independent of existing UZH files.
+# Do not silently raise download_budget_bytes.
+
+stage: "0C"
+project_name: UAV_MEASUREMENT_FRESH
+download_budget_bytes: 16106127360  # 15 GiB additional EuRoC budget
+download_timeout_s: 600
+download_retries: 6
+download_chunk_bytes: 1048576
+
+euroc:
+  doi: "10.3929/ethz-b-000690084"
+  handle: "20.500.11850/690084"
+  item_uuid: "bcaf173e-5dac-484b-bc37-faf97a594f1f"
+  landing_page: "https://www.research-collection.ethz.ch/handle/20.500.11850/690084"
+  asl_page: "https://projects.asl.ethz.ch/datasets/euroc-mav/"
+  paper_doi: "10.1177/0278364915620033"
+  paper_title: "The EuRoC micro aerial vehicle datasets"
+  license: "In Copyright – Non-Commercial Use Permitted (InC-NC 1.0)"
+  rights_url: "http://rightsstatements.org/page/InC-NC/1.0/"
+  bitstream_base: "https://www.research-collection.ethz.ch/server/api/core/bitstreams"
+  official_tools: "https://github.com/ethz-asl/dataset_tools"
+  download_images: false
+  download_bags: false
+  download_machine_hall: false
+  download_calibration_datasets: false
+  phase_a_archives:
+    - name: vicon_room1.zip
+      uuid: "02ecda9a-298f-498b-970c-b7c44334d880"
+      size_bytes: 6042263426
+      sequences: [V1_01_easy, V1_02_medium, V1_03_difficult]
+      environment: vicon_room1
+    - name: vicon_room2.zip
+      uuid: "ea12bc01-3677-4b4c-853d-87c7870b8c44"
+      size_bytes: 6013384949
+      sequences: [V2_01_easy, V2_02_medium, V2_03_difficult]
+      environment: vicon_room2
+  optional_archives:
+    - name: machine_hall.zip
+      uuid: "7b2419c1-62b5-4714-b7f8-485e5fe3e5fe"
+      size_bytes: 12683729426
+      sequences: [MH_01_easy, MH_02_easy, MH_03_medium, MH_04_difficult, MH_05_difficult]
+      environment: machine_hall
+    - name: calibration_datasets.zip
+      uuid: "5732e864-10f1-49e7-befb-669ee29ff770"
+      size_bytes: 4416030888
+      sequences: [imu_april, cam_april, cam_checkerboard]
+      environment: calibration
+
+usability:
+  min_overlap_seconds: 20.0
+  min_imu_duration_seconds: 20.0
+  min_finite_fraction: 0.99
+
+uzh_fpv_retained_primary:
+  - indoor_forward_6_snapdragon
+  - indoor_forward_9_snapdragon
+  - indoor_forward_10_snapdragon
+  - indoor_45_2_snapdragon
+  - indoor_45_4_snapdragon
+  - indoor_45_13_snapdragon
+  - indoor_45_14_snapdragon
+  - outdoor_forward_1_snapdragon

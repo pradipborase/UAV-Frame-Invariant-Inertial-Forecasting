@@ -1,0 +1,7 @@
+model,source_dataset,config_id,parameters,mean_training_time_s,median_inference_ms_per_window,mean_artifact_bytes,device,notes
+TCN,EUROC,TCN12,16212,3.132026667,0.05487187514,70005,cpu,computational footprint; not a real-time deployability claim
+GRU,EUROC,GRU07,14356,17.1711419,0.1467562499,61321,cpu,computational footprint; not a real-time deployability claim
+TRANSFORMER,EUROC,TR12,13460,23.44024147,0.1358585937,60973,cpu,computational footprint; not a real-time deployability claim
+TCN,UZH_FPV,TCN07,26516,9.594256333,0.08240625016,112589,cpu,computational footprint; not a real-time deployability claim
+GRU,UZH_FPV,GRU07,14356,11.4408866,0.1483828125,61537,cpu,computational footprint; not a real-time deployability claim
+TRANSFORMER,UZH_FPV,TR05,13460,27.4983094,0.2139750002,61209,cpu,computational footprint; not a real-time deployability claim

@@ -1,0 +1,5 @@
+context,model_id,inputs,lag,alpha,fit_dataset,role
+WITHIN_EUROC,B3_RIDGE_QF_QW,q_f + q_w,25,0.0001,EUROC,within-domain LORO winner
+WITHIN_UZH,B3_RIDGE_QF_QW,q_f + q_w,10,0.01,UZH_FPV,within-domain LORO winner
+EUROC_TO_UZH,B3_RIDGE_QF_QW,q_f + q_w,25,0.0001,EUROC,source-frozen EuRoC B3 applied zero-shot
+UZH_TO_EUROC,B2_RIDGE_QF,q_f,25,1,UZH_FPV,source-frozen UZH B2 applied zero-shot (B2 beat B3 on this direction)

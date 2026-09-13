@@ -1,0 +1,102 @@
+
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{setspace}
+\usepackage{parskip}
+\usepackage{enumitem}
+\usepackage{amsmath,amssymb}
+\usepackage{siunitx}
+\usepackage{microtype}
+\usepackage{hyperref}
+\hypersetup{hidelinks}
+\setstretch{1.12}
+
+\begin{document}
+
+\begin{center}
+{\LARGE\bfseries Novelty and Contribution Statement}
+
+\vspace{0.7em}
+{\large\itshape A Frame-Invariant Evaluation Protocol for Cross-Platform Short-Horizon UAV Inertial Forecasting}
+
+\vspace{0.4em}
+Pradip Diwan Borase and Vijyant Agarwal\\
+Department of Mechanical Engineering, Netaji Subhas University of Technology, New Delhi, India
+\end{center}
+
+\section*{1. Novelty in one sentence}
+
+The novelty of this work is \textbf{not} the Euclidean norm, a new neural architecture, or IMU forecasting by itself; it is a \textbf{physically defensible and leakage-controlled cross-platform evaluation protocol} that enables short-horizon forecasting of a common UAV inertial quantity across heterogeneous public datasets without fitting a target-domain axis alignment, while preserving source-only model selection, causal preprocessing, flight-level inference, and frozen zero-shot transfer.
+
+\section*{2. Technical gap addressed}
+
+Cross-dataset evaluation of learning-based inertial forecasting is difficult because nominally similar IMU channels may differ in sensor-frame orientation, native sampling rate, platform dynamics, recording duration, and data-processing conventions. A comparison based directly on native $x$-, $y$-, and $z$-components can therefore conflate forecasting performance with an unsupported coordinate-frame assumption. In addition, target-domain normalization, alignment, model selection, or early stopping can turn a nominally ``zero-shot'' comparison into implicit adaptation, while treating thousands of overlapping forecast windows as independent samples can substantially overstate the effective experimental sample size.
+
+The present study addresses these issues using EuRoC MAV and UZH-FPV. It defines accelerometer specific-force magnitude
+\[
+q_f(t)=\|\mathbf{f}(t)\|_2
+\]
+as the primary forecast quantity and angular-speed magnitude
+\[
+q_\omega(t)=\|\boldsymbol{\omega}(t)\|_2
+\]
+as an auxiliary input. The Euclidean norm is standard mathematics and is explicitly \textbf{not} claimed as novel. Its role is to provide a physically transparent scalar quantity whose value is unchanged by a fixed orthonormal rotation of the sensor axes, thereby avoiding an unsupported target-fitted EuRoC--UZH body-axis registration.
+
+\section*{3. Principal methodological contributions}
+
+The paper makes three linked methodological contributions.
+
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Frame-invariant cross-platform quantity definition.}
+    A common scalar inertial quantity is defined for cross-dataset comparison when a justified common body-axis transformation is unavailable. This preserves the physical unit of specific force while making the evaluation invariant to a fixed sensor-axis rotation. The limitation is stated explicitly: directional information is discarded, so the formulation is not a substitute for vector-valued state estimation or equivariant inertial odometry.
+
+    \item \textbf{Leakage-controlled evaluation protocol.}
+    The protocol combines causal anti-alias filtering and deterministic resampling to \SI{100}{\hertz}, a common \SI{1.0}{\second} candidate input window, a \SI{0.20}{\second} direct forecast horizon, source-only scaling and model selection, frozen source-to-target transfer, and flight recording---not overlapping forecast window---as the inferential unit. All target-domain fitting, alignment, early stopping, and architecture selection are prohibited.
+
+    \item \textbf{Complexity--generalization benchmark under physically heterogeneous transfer.}
+    Persistence, source-selected Ridge, TCN, GRU, and a compact Transformer are evaluated under the same forecasting task. The central empirical contribution is that added temporal-model complexity gives \emph{domain-dependent} gains rather than uniformly superior cross-platform generalization. This conclusion is strengthened by paired flight-level analysis, complete 10--200~ms horizon profiles, and sequence-level bootstrap intervals.
+\end{enumerate}
+
+\section*{4. Fairness and reproducibility refinements}
+
+Two technical audits materially strengthen the reproducibility of the final manuscript.
+
+\paragraph{Filter-order audit.}
+The actual preprocessing code uses SciPy elliptic IIR design in SOS form with a \SI{30}{\hertz} passband edge, \SI{45}{\hertz} stopband edge, \SI{1}{\decibel} maximum passband ripple, and \SI{60}{\decibel} minimum stopband attenuation. The resulting \SI{200}{\hertz} EuRoC filter is \textbf{fifth order}, while the \SI{500}{\hertz} UZH-FPV filter is \textbf{sixth order}. The earlier ``order 6'' EuRoC label arose from inferring order as twice the number of SOS rows; the executed coefficients and processed signals were not changed. The manuscript now reports the actual executed orders and preserves the exact coefficients.
+
+\paragraph{Input-history fairness audit.}
+Every prediction origin provides a common 100-sample (\SI{1.0}{\second}) candidate history. TCN, GRU, and Transformer consume all 100 samples. Ridge selects an effective suffix length from the predeclared grid $\{10,25,50,100\}$ using source-only validation. The primary B3 Ridge therefore uses 25 samples for EuRoC and 10 samples for UZH-FPV. To test whether this difference in effective memory unfairly favors Ridge, a post hoc equal-history sensitivity fixes Ridge at 100 samples and retunes only $\alpha$ under the original source-only rules. The fixed-100-lag RMSE is worse than the primary source-selected-lag Ridge in all four contexts:
+\begin{itemize}[leftmargin=*]
+    \item Within EuRoC: 0.748 versus 0.728~\si{\metre\per\second\squared};
+    \item Within UZH-FPV: 1.957 versus 1.943~\si{\metre\per\second\squared};
+    \item EuRoC$\rightarrow$UZH-FPV: 2.126 versus 2.065~\si{\metre\per\second\squared};
+    \item UZH-FPV$\rightarrow$EuRoC: 0.842 versus 0.831~\si{\metre\per\second\squared}.
+\end{itemize}
+No neural model is retrained, and target-domain data are not used to tune this sensitivity analysis. The result shows that Ridge was not denied access to the same one-second history; source validation simply preferred shorter effective memory.
+
+\section*{5. Main empirical finding}
+
+The study does not support a universal ``deep learning is better'' conclusion. Within EuRoC, source-selected Ridge is strongest on the primary aggregate metric. Within UZH-FPV, the Transformer provides the clearest nonlinear gain. Under EuRoC$\rightarrow$UZH transfer, that Transformer advantage reverses, while TCN remains close to Ridge. Under UZH-FPV$\rightarrow$EuRoC transfer, GRU performs best. Across the four contexts, the best learned method improves RMSE relative to Persistence by approximately 12.2--20.6\%, confirming nontrivial short-horizon predictability despite the gravity-dominated scalar target.
+
+The scientific message is therefore that \textbf{within-dataset model ranking is not a reliable proxy for cross-platform generalization}, and that evaluation design---physical quantity definition, causal preprocessing, leakage control, inferential unit, and frozen transfer---can be as important as architecture choice.
+
+\section*{6. What is explicitly not claimed}
+
+The manuscript does not claim:
+\begin{itemize}[leftmargin=*]
+    \item a novel Euclidean-norm operation;
+    \item a new TCN, GRU, Transformer, or Ridge architecture;
+    \item that nonlinear models universally outperform Ridge;
+    \item that domain shift is eliminated;
+    \item that $q_f$ is independently referenced translational acceleration;
+    \item that the reported bootstrap intervals are a GUM-style metrological uncertainty budget;
+    \item onboard real-time flight suitability; or
+    \item generalization to all UAV platforms.
+\end{itemize}
+
+\section*{7. Significance for \emph{Measurement}}
+
+The work is positioned as a measurement-oriented evaluation study rather than as an architecture-proposal paper. Its contribution is a reproducible procedure for comparing learning-assisted inertial forecasting across heterogeneous sensing platforms while respecting coordinate-frame ambiguity, causal signal processing, source-only fitting, and the true independent experimental unit. The study therefore contributes to reliable benchmarking and interpretation of machine-learning-assisted inertial measurements, particularly where apparent performance improvements may otherwise arise from frame assumptions, target leakage, unequal recording influence, or model-selection bias.
+
+\end{document}

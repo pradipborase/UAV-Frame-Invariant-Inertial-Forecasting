@@ -1,0 +1,58 @@
+# Locked Stage-1 protocol. PRE-SPECIFIED LOCKED PROTOCOL (not an OSF/Zenodo registration).
+protocol_name: UAV_MEASUREMENT_FRESH_STAGE1
+terminology: PRE_SPECIFIED_LOCKED_PROTOCOL
+datasets: [EUROC, UZH_FPV]
+primary_sequences:
+  EUROC: [V1_01_easy, V1_02_medium, V1_03_difficult, V2_01_easy, V2_02_medium, V2_03_difficult]
+  UZH_FPV: [indoor_forward_6_snapdragon, indoor_forward_9_snapdragon, indoor_forward_10_snapdragon, indoor_45_2_snapdragon, indoor_45_4_snapdragon, indoor_45_13_snapdragon, indoor_45_14_snapdragon, outdoor_forward_1_snapdragon]
+primary_physical_quantity: accelerometer_specific_force_magnitude
+primary_target: q_f
+input_channels: [q_f, q_w]
+secondary_target_not_confirmatory: q_w
+q_f_unit: m/s^2
+q_w_unit: rad/s
+common_sampling_rate_hz: 100
+filter:
+  causal: true
+  requirements:
+    passband_hz: 30
+    stopband_hz: 45
+    gpass_db: 1
+    gstop_db: 60
+    causal: true
+    zero_phase_forbidden: true
+  fit_scope: NONE_DETERMINISTIC_PHYSICAL
+lookback_s: 1.0
+lookback_samples: 100
+horizon_s: 0.20
+horizon_samples: 20
+stride_s: 0.05
+stride_samples: 5
+forecast_reporting_horizons_ms: [50, 100, 200]
+inferential_unit: SEQUENCE
+within_domain_folds:
+  EUROC: leave_one_recording_out_n6
+  UZH_FPV: leave_one_recording_out_n8
+source_selection_folds:
+  EUROC: leave_vicon_room_out
+  UZH_FPV: leave_trajectory_group_out
+transfer_directions: [EUROC_TO_UZH, UZH_TO_EUROC]
+future_normalization_rule: SOURCE_TRAIN_ONLY
+FIT_SCOPE_FITTED_PREPROCESSORS: SOURCE_TRAIN_ONLY
+primary_metric: equal_sequence_mean_multihorizon_RMSE_qf_mps2
+secondary_metrics: [MAE_mps2, RMSE_50ms, RMSE_100ms, RMSE_200ms, RMSE_vs_horizon, persistence_skill]
+bootstrap_repetitions: 10000
+bootstrap_seed: 20260912
+zero_shot_rules:
+  no_target_parameter_fitting: true
+  no_target_scaler: true
+  no_target_rotation: true
+  wording: zero-shot with respect to model fitting and data-driven adaptation
+forbidden_target_adaptations:
+  - target_test_mean_std
+  - target_test_min_max
+  - target_fitted_PCA
+  - target_fitted_rotation
+  - target_fitted_bias
+  - target_fitted_time_warp
+  - post_test_retuning

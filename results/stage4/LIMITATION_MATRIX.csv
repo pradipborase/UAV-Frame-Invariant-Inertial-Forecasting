@@ -1,0 +1,18 @@
+limitation,severity,effect_on_interpretation,mitigation,future_work
+only 14 independent recordings (6 EuRoC / 8 UZH),HIGH,Sequence-bootstrap CIs are wide; do not claim statistical superiority from n=6.,"Sequence as inferential unit; report CIs, wins/losses, not p-centric claims.",More independent flights and platforms.
+only two datasets,HIGH,"Transfer is EuRoC↔UZH, not all UAV platforms.",Official heterogeneous pair; zero-shot protocol.,Additional official IMU datasets if representation-compatible.
+different platforms/sensors,MEDIUM,"Confounds hardware, dynamics, and environment.",Invariant scalars; no fitted alignment.,Same-airframe multi-IMU studies.
+different flight regimes,MEDIUM,UZH includes more aggressive specific-force variation.,Report within and transfer separately; high-q_f secondary analysis.,Matched-dynamics transfers.
+q_f magnitude removes directional information,HIGH,Cannot recover 3-axis specific force or a shared body frame.,Chosen because axes are not a demonstrated common frame.,Only if an official shared frame exists.
+no direct acceleration ground truth,HIGH,"Target is future sensor observation, not independent physical acceleration.",State the estimand explicitly.,Calibrated independent force/IMU references if available.
+target is future sensor observation,HIGH,"Forecasts IMU telemetry, not navigation-grade acceleration.",Telemetry-forecast framing.,Downstream control/estimation tasks.
+different reference-trajectory instrumentation,MEDIUM,Pose products are not interchangeable IMU labels.,Not used as q_f supervision.,Keep pose for characterization only.
+high-q_f data relatively sparse,MEDIUM,Secondary high-q_f RMSE is noisier.,Pre-specified p95; not used for selection.,Event-conditioned evaluation with more data.
+UZH body-frame extrinsic unresolved,HIGH,Prevents a shared 3-axis body-frame target.,Magnitude representation.,Official CAD/Kalibr vehicle-body chain if released.
+source datasets audited before zero-shot evaluation,MEDIUM,Not researcher-blind to target existence.,No target-fitted parameters; define zero-shot narrowly.,Hold out a third dataset if acquired later.
+"zero-shot means no data-driven target adaptation, not complete blindness",MEDIUM,Protocol knowledge of both datasets exists.,Explicit definition in terminology audit.,Preregister a future third-dataset transfer.
+advanced models relatively small,LOW,Does not test large foundation models.,Pre-specified compact budget.,Only if scientifically justified later.
+CPU-only computational timing,LOW,Footprint is machine-specific.,"Report CPU, warmup, median per window.",Target hardware benchmarks.
+no onboard flight deployment,HIGH,No closed-loop or embedded claim.,Footprint wording only.,Hardware-in-the-loop / flight test.
+no probabilistic uncertainty prediction,MEDIUM,"CIs are across sequences, not per-window predictive distributions.",Do not call CIs measurement uncertainty.,Proper scoring rules if uncertainty is in scope.
+possible dominance of gravity magnitude,MEDIUM,q_f may sit near 9.81 m/s^2.,Gravity-dominance characterization; Persistence is a strong baseline.,Residual-from-g analyses only if protocol is reopened.
