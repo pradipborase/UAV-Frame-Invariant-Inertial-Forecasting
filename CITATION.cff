@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 message: "If you use this reproducibility package, please cite the following work."
-title: "A Frame-Invariant Evaluation Protocol for Cross-Platform Short-Horizon UAV Inertial Forecasting"
+title: "A Rotation-Invariant, Leakage-Controlled Evaluation Protocol for Cross-Platform Short-Horizon UAV Inertial Forecasting"
 authors:
   - family-names: Borase
     given-names: Pradip Diwan
@@ -14,11 +14,16 @@ keywords:
   - UAV
   - inertial measurement
   - specific force
+  - rotation invariance
+  - leakage-controlled evaluation
+  - cross-dataset generalization
   - zero-shot transfer
   - time-series forecasting
+repository-code: "https://github.com/pradipborase/UAV-Frame-Invariant-Inertial-Forecasting"
+doi: "10.5281/zenodo.22751169"
 preferred-citation:
   type: article
-  title: "A Frame-Invariant Evaluation Protocol for Cross-Platform Short-Horizon UAV Inertial Forecasting"
+  title: "A Rotation-Invariant, Leakage-Controlled Evaluation Protocol for Cross-Platform Short-Horizon UAV Inertial Forecasting"
   authors:
     - family-names: Borase
       given-names: Pradip Diwan
