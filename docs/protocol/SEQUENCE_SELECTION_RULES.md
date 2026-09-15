@@ -1,38 +1,93 @@
-# SEQUENCE_SELECTION_RULES.md
+SEQUENCE_SELECTION_RULES.md
 
-Selection is frozen against forecasting performance. It uses official metadata only.
+Current manuscript experiment: EuRoC MAV + UZH-FPV
 
-## Independent unit
+These rules describe the final experiment reported in A Rotation-Invariant, Leakage-Controlled Evaluation Protocol for Cross-Platform Short-Horizon UAV Inertial Forecasting.
 
-An **actual recording** is the future inferential unit.
+Selection is frozen against forecasting performance and is based on official-source provenance and measurement usability. An overlapping window is never an independent experimental unit; the inferential unit is an actual flight recording / sequence.
 
-Not an overlapping window. Not a rendered camera environment of the same Blackbird flight. Not Snapdragon and DAVIS of the same UZH number treated as two flights.
+General eligibility / usability rule
 
-## Blackbird hierarchy
+A primary recording must satisfy the following quality and provenance conditions:
 
-`DATASET → PLATFORM → ENVIRONMENT (physical mocap volume) → TRAJECTORY FAMILY → SPEED CONDITION → YAW MODE → RECORDING`
+obtained from an official dataset source;
 
-Same family at nearby speeds: `potential_dependency_group` = trajectory family.
+readable accelerometer and gyroscope measurements;
 
-Rendered environments share IMU/GT: they are not extra recordings.
+physical units verified from raw data / official documentation / calibration material;
 
-## UZH-FPV hierarchy
+sensor frame or calibration relation understood sufficiently for the scalar measurement protocol;
 
-`DATASET → PLATFORM → ENVIRONMENT/CAMERA ORIENTATION → SEQUENCE NUMBER → SENSOR STREAM`
+timestamps auditable and monotonic over the usable interval;
 
-`recording_id` = environment + camera + number.  
-`sequence_id` for Stage 0 Snapdragon = `recording_id` + `_snapdragon`.
+public reference data available for dataset integrity and overlap auditing;
 
-Withheld GT: `GT_WITHHELD`. Never recovered unofficially.
+sufficient valid IMU/reference overlap for the planned sequence-level analysis;
 
-## Stage-0 subset rules
+overwhelmingly finite IMU samples and no identified file corruption;
 
-- Blackbird: up to 12 flights, ≥4 families, ≥3 speed regimes if listed, more than one yaw mode, IMU+GT preferred, no images.
-- UZH: up to 10 public-GT Snapdragon zips, indoor/outdoor and forward/45 coverage, mixed documented speeds.
-- Minimum useful targets: 6 Blackbird and 6 UZH public-GT sequences. Missing Blackbird files → `BLACKBIRD_ACQUISITION_INCOMPLETE`, not fabricated replacements.
+inclusion/exclusion determined independently of forecasting error.
 
-## Usability (quality only)
+Irregular sampling is reported and audited; it is not automatically an exclusion if the recording remains usable under the locked causal-resampling protocol.
 
-`USABLE_PRIMARY` normally requires official readable data, IMU accel+gyro, verified units, understood sensor frame, timestamps audited, public GT, ≥20 s IMU–GT overlap, ≥99% finite IMU, no corruption, documented calibration/frame relation.
+EuRoC MAV primary subset
 
-Irregular sampling is reported, not an automatic exclusion.
+The final primary EuRoC subset is fixed to the six Vicon-room recordings:
+
+V1_01_easy
+
+V1_02_medium
+
+V1_03_difficult
+
+V2_01_easy
+
+V2_02_medium
+
+V2_03_difficult
+
+This subset spans both Vicon rooms and the easy, medium, and difficult sequence labels. The two Vicon rooms define the EuRoC source-validation groups. Other EuRoC recordings are outside the frozen primary subset; they were not excluded because of observed forecasting performance.
+
+UZH-FPV Snapdragon primary subset
+
+The final primary UZH-FPV subset is fixed to the following eight Snapdragon recordings with public reference data:
+
+indoor_forward_6_snapdragon
+
+indoor_forward_9_snapdragon
+
+indoor_forward_10_snapdragon
+
+indoor_45_2_snapdragon
+
+indoor_45_4_snapdragon
+
+indoor_45_13_snapdragon
+
+indoor_45_14_snapdragon
+
+outdoor_forward_1_snapdragon
+
+The source-validation groups are:
+
+indoor_forward
+
+indoor_45
+
+outdoor_forward
+
+Snapdragon and DAVIS streams from the same underlying UZH recording are not treated as independent flights. Recordings with withheld/unavailable public reference data are not promoted to primary experimental units through unofficial reconstruction.
+
+Independence rule
+
+DATASET → RECORDING / FLIGHT → OVERLAPPING WINDOWS
+
+The recording / flight is the inferential unit. Overlapping windows are operational forecasting instances, not independent statistical samples.
+
+Performance-blind selection rule
+
+The retained recording list and group definitions were fixed before forecasting results were inspected. Forecasting RMSE, model ranking, transfer performance, or bootstrap results must never be used to decide whether a recording belongs to the primary set.
+
+Historical Blackbird provenance
+
+Earlier Stage-0/0B work considered the Blackbird dataset. Blackbird was subsequently retired from the final experiment and replaced by EuRoC MAV before the locked EuRoC+UZH forecasting analysis. Any older Blackbird-specific selection notes are historical provenance only and are not part of the final manuscript experiment.
