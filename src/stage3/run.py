@@ -1,4 +1,11 @@
 """Stage 3 orchestration: Phase 3A source freeze, then Phase 3B zero-shot transfer."""
+# HISTORICAL AUDIT ORCHESTRATOR — NOT AUTHORITATIVE FOR MANUSCRIPT RIDGE REPORTING.
+# This file preserves an earlier descriptive UZH_TO_EUROC B2 Ridge mapping for provenance.
+# The publication-current primary Ridge comparator is B3_RIDGE_QF_QW in ALL four contexts,
+# selected by source-domain validation only. See:
+#   publication_current/RIDGE_COMPARATOR_MAP.csv
+#   docs/POSTHOC_REPORTING_CORRECTIONS.md
+# Do not use the historical BEST_RIDGE mapping below to regenerate manuscript primary results.
 
 from __future__ import annotations
 
